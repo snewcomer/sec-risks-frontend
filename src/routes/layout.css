@@ -1,0 +1,1320 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+/* Variables */
+.vane-home {
+	--vane-mono: 'Space Mono', monospace;
+	--vane-display: 'Playfair Display', serif;
+	--vane-yellow: #ffeb3b;
+	--vane-yellow-soft: #ffe999;
+	--vane-black: #0a0a0a;
+	--vane-gray: #666;
+	--vane-light: #f5f5f5;
+}
+
+.vane-home * {
+	box-sizing: border-box;
+}
+
+/* Base Styles */
+html,
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+/* Utility Classes */
+.vane-mono {
+	font-family: var(--vane-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	font-size: 13px;
+}
+
+.vane-display {
+	font-family: var(--vane-display);
+}
+
+.vane-gray {
+	color: var(--vane-gray);
+}
+
+.vane-yellow {
+	color: var(--vane-yellow);
+}
+
+.vane-white {
+	color: white;
+}
+
+/* Navigation */
+.vane-nav {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+	padding: 1.5rem 2rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	background: white;
+}
+
+.vane-nav-left {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.vane-nav-right {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 0.25rem;
+}
+
+.vane-nav-link {
+	text-decoration: none;
+	margin-top: 0.5rem;
+}
+
+/* Button */
+.vane-btn {
+	font-family: var(--vane-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	font-size: 12px;
+	padding: 0.5rem 1rem;
+	border: 1px solid var(--vane-black);
+	background: transparent;
+	cursor: pointer;
+	transition: all 0.15s ease;
+	text-decoration: none;
+	color: var(--vane-black);
+}
+
+.vane-btn:hover {
+	background: var(--vane-yellow);
+	border-color: var(--vane-yellow);
+}
+
+/* Hero Section */
+.vane-hero {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	padding: 8rem 2rem 4rem;
+	position: relative;
+}
+
+.vane-hero-content {
+	max-width: 900px;
+}
+
+.vane-headline {
+	font-family: var(--vane-display);
+	font-size: clamp(4rem, 12vw, 10rem);
+	font-weight: 400;
+	font-style: italic;
+	line-height: 0.9;
+	margin: 0 0 2rem;
+	color: var(--vane-black);
+}
+
+.vane-subhead {
+	font-family: var(--vane-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	font-size: 13px;
+	max-width: 600px;
+	margin: 0 auto 3rem;
+	line-height: 1.8;
+	color: var(--vane-gray);
+}
+
+/* Target Graphic */
+.vane-target {
+	width: 120px;
+	height: 120px;
+	margin: 3rem auto;
+	position: relative;
+}
+
+.vane-target-ring {
+	position: absolute;
+	border: 1px solid var(--vane-black);
+	border-radius: 50%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.vane-target-ring:nth-child(1) {
+	width: 120px;
+	height: 120px;
+	border-style: dashed;
+}
+
+.vane-target-ring:nth-child(2) {
+	width: 80px;
+	height: 80px;
+}
+
+.vane-target-ring:nth-child(3) {
+	width: 40px;
+	height: 40px;
+	background: var(--vane-yellow);
+	border-color: var(--vane-yellow);
+}
+
+.vane-target-cross {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 20px;
+	font-weight: 300;
+	color: var(--vane-black);
+}
+
+/* Scroll Hint */
+.vane-scroll-hint {
+	position: absolute;
+	bottom: 2rem;
+	left: 50%;
+	transform: translateX(-50%);
+	font-family: var(--vane-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	font-size: 12px;
+	color: var(--vane-gray);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.vane-scroll-line {
+	width: 1px;
+	height: 40px;
+	background: var(--vane-gray);
+	animation: vane-scroll-pulse 2s ease infinite;
+}
+
+@keyframes vane-scroll-pulse {
+	0%,
+	100% {
+		transform: scaleY(1);
+		opacity: 1;
+	}
+	50% {
+		transform: scaleY(0.5);
+		opacity: 0.5;
+	}
+}
+
+/* Sections */
+.vane-section {
+	padding: 6rem 2rem;
+	border-top: 1px solid #e5e5e5;
+}
+
+.vane-section-dark {
+	background: var(--vane-black);
+	color: white;
+	border-top: none;
+}
+
+.vane-section-yellow {
+	background: var(--vane-yellow-soft);
+	border-top: none;
+}
+
+.vane-section-flush {
+	padding: 0;
+}
+
+/* Grid Layout */
+.vane-grid {
+	max-width: 1200px;
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: repeat(12, 1fr);
+	gap: 2rem;
+}
+
+.vane-col-left {
+	grid-column: 1 / 5;
+}
+
+.vane-col-right {
+	grid-column: 5 / 13;
+}
+
+/* Section Typography */
+.vane-section-label {
+	font-family: var(--vane-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.15em;
+	font-size: 12px;
+	color: var(--vane-gray);
+	margin-bottom: 1rem;
+}
+
+.vane-section-dark .vane-section-label {
+	color: #888;
+}
+
+.vane-section-title {
+	font-family: var(--vane-display);
+	font-size: clamp(2rem, 5vw, 3.5rem);
+	font-weight: 400;
+	line-height: 1.1;
+	margin: 0 0 1.5rem;
+}
+
+.vane-section-text {
+	font-family: var(--vane-mono);
+	font-size: 16px;
+	line-height: 2;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--vane-gray);
+}
+
+.vane-section-dark .vane-section-text {
+	color: #999;
+}
+
+/* Features Grid */
+.vane-features {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 1rem;
+	margin-top: 4rem;
+}
+
+.vane-feature {
+	border-left: 1px solid #333;
+	padding-left: 1.5rem;
+}
+
+.vane-feature-num {
+	font-family: var(--vane-display);
+	font-size: 3rem;
+	font-style: italic;
+	margin-bottom: 1rem;
+	color: var(--vane-yellow);
+}
+
+.vane-feature-title {
+	font-family: var(--vane-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	font-size: 12px;
+	margin-bottom: 1rem;
+}
+
+.vane-feature-text {
+	font-family: var(--vane-mono);
+	font-size: 13px;
+	line-height: 1.8;
+	color: #888;
+}
+
+/* Before/After Comparison */
+.vane-compare {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0;
+}
+
+.vane-compare-side {
+	padding: 3rem;
+	position: relative;
+}
+
+.vane-compare-before {
+	background: #f0f0f0;
+}
+
+.vane-compare-label {
+	font-family: var(--vane-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.15em;
+	font-size: 10px;
+	color: var(--vane-gray);
+	margin-bottom: 1.5rem;
+	display: block;
+}
+
+.vane-section-yellow .vane-compare-label {
+	color: var(--vane-black);
+}
+
+.vane-compare-quote {
+	font-family: var(--vane-display);
+	font-size: 1.25rem;
+	font-style: italic;
+	line-height: 1.5;
+	color: var(--vane-black);
+	margin: 0;
+}
+
+/* CTA Section */
+.vane-cta {
+	text-align: center;
+	padding: 8rem 2rem;
+}
+
+.vane-cta-headline {
+	font-family: var(--vane-display);
+	font-size: clamp(2.5rem, 6vw, 5rem);
+	font-weight: 400;
+	font-style: italic;
+	margin: 0 0 2rem;
+}
+
+.vane-cta-text {
+	margin-bottom: 3rem;
+	max-width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+	line-height: 2;
+}
+
+/* Form */
+.vane-form {
+	display: flex;
+	justify-content: center;
+	gap: 0;
+	max-width: 500px;
+	margin: 0 auto;
+}
+
+.vane-input {
+	font-family: var(--vane-mono);
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	padding: 1rem 1.5rem;
+	border: 1px solid var(--vane-black);
+	border-right: none;
+	background: white;
+	flex: 1;
+	outline: none;
+}
+
+.vane-input::placeholder {
+	color: var(--vane-gray);
+}
+
+.vane-submit {
+	font-family: var(--vane-mono);
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	padding: 1rem 2rem;
+	border: 1px solid var(--vane-gray);
+	background: var(--vane-gray);
+	color: white;
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+
+.vane-submit:hover {
+	background: var(--vane-black);
+	border-color: var(--vane-black);
+}
+
+/* Footer */
+.vane-footer {
+	padding: 3rem 2rem;
+	border-top: 1px solid #e5e5e5;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.vane-footer-links {
+	display: flex;
+	gap: 2rem;
+}
+
+.vane-footer-link {
+	font-family: var(--vane-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	font-size: 10px;
+	color: var(--vane-gray);
+	text-decoration: none;
+	transition: color 0.15s ease;
+}
+
+.vane-footer-link:hover {
+	color: var(--vane-black);
+}
+
+/* Auth Pages */
+.vane-auth-page {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.vane-nav-brand {
+	text-decoration: none;
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.vane-auth-section {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 8rem 2rem 4rem;
+}
+
+.vane-auth-container {
+	max-width: 450px;
+	width: 100%;
+}
+
+.vane-auth-header {
+	text-align: center;
+	margin-bottom: 3rem;
+}
+
+.vane-auth-headline {
+	font-family: var(--vane-display);
+	font-size: clamp(2rem, 5vw, 3rem);
+	font-weight: 400;
+	font-style: italic;
+	margin: 0 0 1rem;
+	color: var(--vane-black);
+}
+
+.vane-auth-subhead {
+	font-size: 13px;
+	line-height: 1.8;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.vane-auth-form {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.vane-auth-error {
+	padding: 1rem;
+	background: #fee;
+	border: 1px solid #fcc;
+	border-radius: 4px;
+}
+
+.vane-auth-error .vane-mono {
+	color: #c00;
+	font-size: 12px;
+}
+
+.vane-form-group {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.vane-form-label {
+	font-size: 11px;
+	letter-spacing: 0.1em;
+	color: var(--vane-gray);
+}
+
+.vane-form-input {
+	font-family: var(--vane-mono);
+	font-size: 14px;
+	padding: 1rem;
+	border: 1px solid #ddd;
+	background: white;
+	transition: border-color 0.15s ease;
+}
+
+.vane-form-input:focus {
+	outline: none;
+	border-color: var(--vane-black);
+}
+
+.vane-form-input::placeholder {
+	color: #bbb;
+}
+
+.vane-form-actions {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.vane-form-link {
+	font-size: 11px;
+	color: var(--vane-gray);
+	text-decoration: none;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	transition: color 0.15s ease;
+}
+
+.vane-form-link:hover {
+	color: var(--vane-black);
+}
+
+.vane-auth-button {
+	font-family: var(--vane-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	font-size: 13px;
+	padding: 1.25rem;
+	background: var(--vane-black);
+	color: white;
+	border: 1px solid var(--vane-black);
+	cursor: pointer;
+	transition: all 0.15s ease;
+	margin-top: 0.5rem;
+}
+
+.vane-auth-button:hover:not(:disabled) {
+	background: var(--vane-yellow);
+	color: var(--vane-black);
+	border-color: var(--vane-yellow);
+}
+
+.vane-auth-button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.vane-auth-footer {
+	text-align: center;
+	padding-top: 1.5rem;
+	border-top: 1px solid #e5e5e5;
+	display: flex;
+	gap: 0.5rem;
+	justify-content: center;
+	align-items: center;
+}
+
+/* Pricing Page */
+.vane-plans-header {
+	padding: 10rem 2rem 4rem;
+	text-align: center;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+.vane-plans-header-content {
+	max-width: 600px;
+	margin: 0 auto;
+}
+
+.vane-plans-headline {
+	font-family: var(--vane-display);
+	font-size: clamp(2.5rem, 6vw, 4rem);
+	font-weight: 400;
+	line-height: 1.1;
+	margin: 0 0 1.5rem;
+	color: var(--vane-black);
+}
+
+.vane-yellow-text {
+	color: #b8860b;
+}
+
+.vane-plans-subhead {
+	font-family: var(--vane-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	font-size: 13px;
+	color: var(--vane-gray);
+	line-height: 1.8;
+}
+
+.vane-plans-section {
+	padding: 4rem 2rem;
+	background: var(--vane-light);
+}
+
+.vane-plans-grid {
+	max-width: 900px;
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 2rem;
+}
+
+.vane-plan-card {
+	background: white;
+	border: 1px solid #e5e5e5;
+	padding: 2.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+	transition: border-color 0.2s ease;
+}
+
+.vane-plan-card:hover {
+	border-color: var(--vane-black);
+}
+
+.vane-plan-card-dark {
+	background: var(--vane-black);
+	border-color: var(--vane-black);
+	color: white;
+}
+
+.vane-plan-card-dark:hover {
+	border-color: var(--vane-yellow);
+}
+
+.vane-plan-header {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.vane-plan-label {
+	font-family: var(--vane-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.15em;
+	font-size: 11px;
+	color: var(--vane-gray);
+}
+
+.vane-plan-card-dark .vane-plan-label {
+	color: #888;
+}
+
+.vane-plan-name {
+	font-family: var(--vane-display);
+	font-size: 2rem;
+	font-weight: 400;
+	margin: 0;
+}
+
+.vane-plan-price {
+	display: flex;
+	align-items: baseline;
+	gap: 0.25rem;
+	padding: 1.5rem 0;
+	border-top: 1px solid #e5e5e5;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+.vane-plan-card-dark .vane-plan-price {
+	border-color: #333;
+}
+
+.vane-plan-currency {
+	font-family: var(--vane-mono);
+	font-size: 1.5rem;
+	color: var(--vane-gray);
+}
+
+.vane-plan-card-dark .vane-plan-currency {
+	color: #888;
+}
+
+.vane-plan-amount {
+	font-family: var(--vane-display);
+	font-size: 4rem;
+	font-weight: 400;
+	line-height: 1;
+}
+
+.vane-plan-period {
+	font-family: var(--vane-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	font-size: 13px;
+	color: var(--vane-gray);
+	margin-left: 0.5rem;
+}
+
+.vane-plan-card-dark .vane-plan-period {
+	color: #888;
+}
+
+.vane-plan-custom {
+	font-family: var(--vane-display);
+	font-size: 2.5rem;
+	font-style: italic;
+}
+
+.vane-plan-features {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	flex: 1;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.vane-plan-feature {
+	display: flex;
+	align-items: flex-start;
+	gap: 1rem;
+	font-family: var(--vane-mono);
+	font-size: 13px;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	line-height: 1.6;
+}
+
+.vane-plan-check {
+	color: var(--vane-yellow);
+	font-weight: 700;
+	flex-shrink: 0;
+}
+
+.vane-plan-card:not(.vane-plan-card-dark) .vane-plan-feature {
+	color: var(--vane-gray);
+}
+
+.vane-plan-card-dark .vane-plan-feature {
+	color: #999;
+}
+
+.vane-plan-cta {
+	display: block;
+	font-family: var(--vane-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	font-size: 13px;
+	text-align: center;
+	padding: 1.25rem 2rem;
+	background: var(--vane-yellow);
+	color: var(--vane-black);
+	text-decoration: none;
+	transition: all 0.15s ease;
+	border: 1px solid var(--vane-yellow);
+}
+
+.vane-plan-cta:hover {
+	background: var(--vane-black);
+	color: white;
+	border-color: var(--vane-black);
+}
+
+.vane-plan-cta-outline {
+	background: transparent;
+	border: 1px solid #555;
+	color: white;
+}
+
+.vane-plan-cta-outline:hover {
+	background: var(--vane-yellow);
+	border-color: var(--vane-yellow);
+	color: var(--vane-black);
+}
+
+.vane-plans-faq {
+	max-width: 900px;
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 0;
+	border-top: 1px solid #e5e5e5;
+}
+
+.vane-faq-item {
+	padding: 3rem 2rem;
+	border-right: 1px solid #e5e5e5;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.vane-faq-item:last-child {
+	border-right: none;
+}
+
+.vane-faq-q {
+	font-family: var(--vane-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	font-size: 11px;
+	color: var(--vane-black);
+	font-weight: 700;
+	margin: 0;
+}
+
+.vane-faq-a {
+	font-family: var(--vane-mono);
+	font-size: 13px;
+	line-height: 1.8;
+	color: var(--vane-gray);
+	margin: 0;
+}
+
+.vane-faq-link {
+	color: var(--vane-black);
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.vane-faq-link:hover {
+	color: var(--vane-yellow);
+}
+
+.vane-cta-buttons {
+	display: flex;
+	justify-content: center;
+	gap: 1rem;
+	margin-top: 2rem;
+}
+
+.vane-btn-primary {
+	font-family: var(--vane-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	font-size: 12px;
+	padding: 1.25rem 2.5rem;
+	background: var(--vane-black);
+	color: white;
+	text-decoration: none;
+	border: 1px solid var(--vane-black);
+	transition: all 0.15s ease;
+}
+
+.vane-btn-primary:hover {
+	background: white;
+	color: var(--vane-black);
+}
+
+.vane-btn-secondary {
+	font-family: var(--vane-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	font-size: 12px;
+	padding: 1.25rem 2.5rem;
+	background: transparent;
+	color: var(--vane-black);
+	text-decoration: none;
+	border: 1px solid var(--vane-black);
+	transition: all 0.15s ease;
+}
+
+.vane-btn-secondary:hover {
+	background: var(--vane-black);
+	color: white;
+}
+
+/* Comparison Page */
+.vane-nav-center {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
+.vane-compare-hero {
+	min-height: 60vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	padding: 10rem 2rem 6rem;
+	background: white;
+}
+
+.vane-compare-hero-content {
+	max-width: 700px;
+	margin: 0 auto;
+}
+
+.vane-compare-headline {
+	font-family: var(--vane-display);
+	font-size: clamp(3rem, 8vw, 6rem);
+	font-weight: 400;
+	line-height: 0.95;
+	margin: 0 0 2rem;
+	color: var(--vane-black);
+}
+
+.vane-compare-headline-accent {
+	font-style: italic;
+	color: #b8860b;
+}
+
+.vane-compare-subhead {
+	font-family: var(--vane-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	font-size: 13px;
+	color: var(--vane-gray);
+	line-height: 2;
+}
+
+.vane-diff-grid {
+	max-width: 1200px;
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: 1fr 1.5fr;
+	gap: 4rem;
+	align-items: start;
+}
+
+.vane-diff-left {
+	position: sticky;
+	top: 8rem;
+}
+
+.vane-diff-right {
+	padding-top: 0.5rem;
+}
+
+.vane-table-wrapper {
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 4rem 2rem;
+}
+
+.vane-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-family: var(--vane-mono);
+	font-size: 13px;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.vane-table-header {
+	padding: 1.5rem 1rem;
+	text-align: left;
+	border-bottom: 2px solid var(--vane-black);
+	font-weight: 400;
+	color: var(--vane-gray);
+}
+
+.vane-table-header-vane {
+	color: var(--vane-black);
+	font-weight: 700;
+}
+
+.vane-table-header-other {
+	color: var(--vane-gray);
+}
+
+.vane-table-row {
+	border-bottom: 1px solid #e5e5e5;
+}
+
+.vane-table-label {
+	padding: 1.25rem 1rem;
+	color: var(--vane-gray);
+	width: 30%;
+}
+
+.vane-table-cell {
+	padding: 1.25rem 1rem;
+	text-transform: none;
+	letter-spacing: 0;
+	line-height: 1.6;
+}
+
+.vane-table-cell-vane {
+	color: var(--vane-black);
+	font-weight: 500;
+	background: rgba(255, 235, 59, 0.1);
+}
+
+.vane-table-cell-other {
+	color: var(--vane-gray);
+}
+
+.vane-example-header {
+	max-width: 1200px;
+	margin: 0 auto 3rem;
+	padding: 0 2rem;
+}
+
+.vane-example-grid {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 2rem;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 2rem;
+}
+
+.vane-example-card {
+	border: 1px solid #e5e5e5;
+	padding: 2rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.vane-example-card-vane {
+	border-color: var(--vane-yellow);
+	border-width: 2px;
+}
+
+.vane-example-card-other {
+	background: #fafafa;
+}
+
+.vane-example-badge {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	font-family: var(--vane-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	font-size: 11px;
+}
+
+.vane-example-badge-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+}
+
+.vane-example-badge-dot-vane {
+	background: var(--vane-yellow);
+}
+
+.vane-example-badge-dot-other {
+	background: #ccc;
+}
+
+.vane-example-content {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.vane-example-highlight {
+	font-family: var(--vane-mono);
+	font-size: 13px;
+	line-height: 1.6;
+	color: var(--vane-black);
+	padding: 1rem;
+	background: rgba(255, 235, 59, 0.2);
+	margin: 0;
+}
+
+.vane-example-text {
+	font-family: var(--vane-mono);
+	font-size: 13px;
+	line-height: 1.8;
+	color: var(--vane-black);
+	margin: 0;
+}
+
+.vane-example-tag {
+	display: inline-block;
+	padding: 0.25rem 0.5rem;
+	background: var(--vane-gray);
+	border-radius: 0.25rem;
+	color: white;
+	font-size: 9px;
+	width: 120px;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	font-family: var(--vane-mono);
+}
+
+.vane-example-action {
+	font-family: var(--vane-mono);
+	font-size: 12px;
+	line-height: 1.6;
+	color: var(--vane-black);
+	padding-top: 1rem;
+	border-top: 1px solid #e5e5e5;
+	margin: 0;
+}
+
+.vane-example-faded {
+	font-family: var(--vane-mono);
+	font-size: 12px;
+	font-style: italic;
+	color: #bbb;
+	padding-top: 1rem;
+	border-top: 1px solid #e5e5e5;
+	margin: 0;
+}
+
+.vane-pillars-header {
+	max-width: 1200px;
+	margin: 0 auto 4rem;
+	padding: 0 2rem;
+}
+
+.vane-pillars-grid {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 2rem;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 3rem;
+}
+
+.vane-pillar {
+	border-left: 1px solid #333;
+	padding-left: 2rem;
+}
+
+.vane-pillar-num {
+	font-family: var(--vane-display);
+	font-size: 3rem;
+	font-style: italic;
+	color: var(--vane-yellow);
+	margin-bottom: 1rem;
+}
+
+.vane-pillar-title {
+	font-family: var(--vane-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	font-size: 12px;
+	color: white;
+	margin: 0 0 1rem;
+}
+
+.vane-pillar-text {
+	font-family: var(--vane-mono);
+	font-size: 14px;
+	line-height: 1.8;
+	color: #888;
+	margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+	.vane-nav {
+		padding: 1rem;
+	}
+
+	.vane-col-left,
+	.vane-col-right {
+		grid-column: 1 / -1;
+	}
+
+	.vane-features {
+		grid-template-columns: 1fr;
+	}
+
+	.vane-compare {
+		grid-template-columns: 1fr;
+	}
+
+	.vane-form {
+		flex-direction: column;
+	}
+
+	.vane-input {
+		border-right: 1px solid var(--vane-black);
+		border-bottom: none;
+	}
+
+	.vane-footer {
+		flex-direction: column;
+		gap: 1.5rem;
+		text-align: center;
+	}
+
+	.vane-cta {
+		padding: 4rem 1rem;
+	}
+
+	.vane-auth-section {
+		padding: 6rem 1rem 2rem;
+	}
+
+	.vane-plans-header {
+		padding: 8rem 1rem 3rem;
+	}
+
+	.vane-plans-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.vane-plans-faq {
+		grid-template-columns: 1fr;
+	}
+
+	.vane-faq-item {
+		border-right: none;
+		border-bottom: 1px solid #e5e5e5;
+		padding: 2rem 1rem;
+	}
+
+	.vane-faq-item:last-child {
+		border-bottom: none;
+	}
+
+	.vane-cta-buttons {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.vane-btn-primary,
+	.vane-btn-secondary {
+		width: 100%;
+		max-width: 300px;
+		text-align: center;
+	}
+
+	.vane-nav-center {
+		display: none;
+	}
+
+	.vane-compare-hero {
+		padding: 8rem 1rem 4rem;
+	}
+
+	.vane-diff-grid {
+		grid-template-columns: 1fr;
+		gap: 2rem;
+	}
+
+	.vane-diff-left {
+		position: static;
+	}
+
+	.vane-table-wrapper {
+		padding: 2rem 1rem;
+		overflow-x: auto;
+	}
+
+	.vane-table {
+		min-width: 500px;
+	}
+
+	.vane-example-grid {
+		grid-template-columns: 1fr;
+		padding: 0 1rem;
+	}
+
+	.vane-example-header {
+		padding: 0 1rem;
+	}
+
+	.vane-pillars-grid {
+		grid-template-columns: 1fr;
+		padding: 0 1rem;
+	}
+
+	.vane-pillars-header {
+		padding: 0 1rem;
+	}
+}

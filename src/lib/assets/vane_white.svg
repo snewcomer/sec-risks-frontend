@@ -1,0 +1,15 @@
+<svg width="270" height="80" viewBox="0 0 270 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- VANE wordmark - classic serif style, white version -->
+  
+  <!-- V -->
+  <path d="M2 14H11L35 62L59 14H68L39 70H31L2 14Z" fill="#ffffff"/>
+  
+  <!-- A -->
+  <path d="M72 70L100 14H108L136 70H127L120 54H88L81 70H72ZM91 47H117L104 20L91 47Z" fill="#ffffff"/>
+  
+  <!-- N -->
+  <path d="M144 70V14H152L192 56V14H200V70H192L152 28V70H144Z" fill="#ffffff"/>
+  
+  <!-- E -->
+  <path d="M212 70V14H265V21H220V38H260V45H220V63H267V70H212Z" fill="#ffffff"/>
+</svg>

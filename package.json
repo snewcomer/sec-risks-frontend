@@ -15,6 +15,7 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^7.0.0",
+		"@sveltejs/adapter-cloudflare": "^7.2.5",
 		"@sveltejs/kit": "^2.49.1",
 		"@sveltejs/vite-plugin-svelte": "^6.2.1",
 		"@tailwindcss/typography": "^0.5.19",
@@ -32,5 +33,11 @@
 		"onlyBuiltDependencies": [
 			"esbuild"
 		]
+	},
+	"dependencies": {
+		"@stripe/stripe-js": "^8.6.3",
+		"@supabase/ssr": "^0.8.0",
+		"@supabase/supabase-js": "^2.91.0",
+		"stripe": "^20.2.0"
 	}
 }

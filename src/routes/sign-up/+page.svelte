@@ -45,7 +45,7 @@
 		}
 	}
 
-	async function handleSocialLogin(provider: 'google' | 'github') {
+	async function handleSocialLogin(provider: 'google') {
 		loading = true;
 		error = '';
 
@@ -192,15 +192,6 @@
 						disabled={loading}
 					>
 						<span>Continue with Google</span>
-					</button>
-
-					<button
-						type="button"
-						class="vane-social-button"
-						onclick={() => handleSocialLogin('github')}
-						disabled={loading}
-					>
-						<span>Continue with GitHub</span>
 					</button>
 
 					<div class="vane-auth-footer">

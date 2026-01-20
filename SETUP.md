@@ -216,3 +216,31 @@ Use any future date for expiry and any 3 digits for CVC.
 - [ ] Enable RLS on all Supabase tables
 - [ ] Use Supabase Auth for authentication
 - [ ] Validate user permissions on server endpoints
+
+
+## After deploying to Cloudflare Pages:
+
+Get your production URL (e.g., https://vane-app.pages.dev)
+Go back to Google Cloud Console
+Add your production domain to:
+Authorized JavaScript origins
+Authorized redirect URIs (with /auth/callback)
+Update your custom domain (vane.app) when you set it up
+
+```
+# Local Origins
+http://localhost:5173
+http://localhost:5174
+
+# Production Origins  
+https://vane.app
+https://YOUR-PROJECT-REF.supabase.co
+
+# Local Redirects
+http://localhost:5173/auth/callback
+https://YOUR-PROJECT-REF.supabase.co/auth/v1/callback
+
+# Production Redirects
+https://vane.app/auth/callback
+https://YOUR-PROJECT-REF.supabase.co/auth/v1/callback
+```

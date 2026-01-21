@@ -87,18 +87,22 @@ body {
 	text-transform: uppercase;
 	letter-spacing: 0.05em;
 	font-size: 12px;
-	padding: 0.5rem 1rem;
-	border: 1px solid var(--vane-black);
-	background: transparent;
+	padding: 0.625rem 1.25rem;
+	border: 1px solid #e3e8ef;
+	background: #635bff;
+	color: white;
 	cursor: pointer;
-	transition: all 0.15s ease;
+	transition: all 0.2s ease;
 	text-decoration: none;
-	color: var(--vane-black);
+	border-radius: 6px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .vane-btn:hover {
-	background: var(--vane-yellow);
-	border-color: var(--vane-yellow);
+	background: #5850d6;
+	border-color: #5850d6;
+	box-shadow: 0 2px 6px rgba(99, 91, 255, 0.25);
+	transform: translateY(-1px);
 }
 
 /* Hero Section */

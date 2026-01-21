@@ -553,27 +553,32 @@
 		background: white;
 		color: #425466;
 		border: 1px solid #e3e8ef;
-		border-radius: 8px;
+		border-radius: 6px;
 		transition: all 0.2s ease;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 	}
 
 	.vane-btn-secondary:hover {
 		background: #f6f9fc;
 		border-color: #c1c9d2;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+		transform: translateY(-1px);
 	}
 
 	.vane-btn-danger {
 		background: #ef4444;
 		color: white;
 		border: 1px solid #ef4444;
-		border-radius: 8px;
+		border-radius: 6px;
 		transition: all 0.2s ease;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 	}
 
 	.vane-btn-danger:hover {
 		background: #dc2626;
 		border-color: #dc2626;
-		box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+		box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
+		transform: translateY(-1px);
 	}
 
 	.vane-btn-ghost {

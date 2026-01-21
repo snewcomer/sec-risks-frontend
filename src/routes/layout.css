@@ -71,14 +71,12 @@ body {
 
 .vane-nav-right {
 	display: flex;
-	flex-direction: column;
-	align-items: flex-end;
-	gap: 0.25rem;
+	align-items: center;
+	gap: 1.5rem;
 }
 
 .vane-nav-link {
 	text-decoration: none;
-	margin-top: 0.5rem;
 }
 
 /* Button */
@@ -87,22 +85,19 @@ body {
 	text-transform: uppercase;
 	letter-spacing: 0.05em;
 	font-size: 12px;
-	padding: 0.625rem 1.25rem;
-	border: 1px solid #e3e8ef;
-	background: #635bff;
+	padding: 0.5rem 1rem;
+	border: 1px solid var(--vane-black);
+	background: var(--vane-black);
 	color: white;
 	cursor: pointer;
-	transition: all 0.2s ease;
+	transition: all 0.15s ease;
 	text-decoration: none;
-	border-radius: 6px;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .vane-btn:hover {
-	background: #5850d6;
-	border-color: #5850d6;
-	box-shadow: 0 2px 6px rgba(99, 91, 255, 0.25);
-	transform: translateY(-1px);
+	background: var(--vane-yellow);
+	border-color: var(--vane-yellow);
+	color: var(--vane-black);
 }
 
 /* Hero Section */
@@ -455,7 +450,7 @@ body {
 	font-family: var(--vane-mono);
 	text-transform: uppercase;
 	letter-spacing: 0.1em;
-	font-size: 10px;
+	font-size: 12px;
 	color: var(--vane-gray);
 	text-decoration: none;
 	transition: color 0.15s ease;

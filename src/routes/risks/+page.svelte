@@ -91,7 +91,7 @@
 			<!-- Header -->
 			<header class="vane-dashboard-header">
 				<div>
-					<h1 class="vane-dashboard-headline">Risk Dashboard</h1>
+					<h1 class="vane-dashboard-headline">SEC Risks</h1>
 					<p class="vane-mono vane-gray">
 						Welcome back, {data.profile?.name || data.profile?.email}
 					</p>
@@ -451,7 +451,7 @@
 
 	.vane-flyout-close {
 		background: #f6f9fc;
-		border: 1px solid #e3e8ef;
+		border: 1px solid #ddd;
 		font-size: 1.5rem;
 		line-height: 1;
 		cursor: pointer;
@@ -461,14 +461,14 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		border-radius: 6px;
 		color: var(--vane-gray);
-		transition: all 0.2s ease;
+		transition: all 0.15s ease;
 	}
 
 	.vane-flyout-close:hover {
 		background: #e3e8ef;
 		color: var(--vane-black);
+		border-color: #999;
 	}
 
 	.vane-flyout-content {
@@ -552,33 +552,29 @@
 	.vane-btn-secondary {
 		background: white;
 		color: #425466;
-		border: 1px solid #e3e8ef;
-		border-radius: 6px;
-		transition: all 0.2s ease;
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+		border: 1px solid #ddd;
+		transition: all 0.15s ease;
+		padding: 0.5rem 1rem;
+		font-size: 12px;
 	}
 
 	.vane-btn-secondary:hover {
 		background: #f6f9fc;
-		border-color: #c1c9d2;
-		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-		transform: translateY(-1px);
+		border-color: #999;
 	}
 
 	.vane-btn-danger {
 		background: #ef4444;
 		color: white;
 		border: 1px solid #ef4444;
-		border-radius: 6px;
-		transition: all 0.2s ease;
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+		transition: all 0.15s ease;
+		padding: 0.5rem 1rem;
+		font-size: 12px;
 	}
 
 	.vane-btn-danger:hover {
 		background: #dc2626;
 		border-color: #dc2626;
-		box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
-		transform: translateY(-1px);
 	}
 
 	.vane-btn-ghost {

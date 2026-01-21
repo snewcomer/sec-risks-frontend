@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
+	import SearchableSelect from '$lib/components/SearchableSelect.svelte';
 
 	let { data, form }: { data: PageData; form: any } = $props();
 
@@ -10,6 +11,13 @@
 	let showDetailsFlyout = $state(false);
 	let selectedWatch = $state<any>(null);
 	let selectedCompany = $state('');
+
+	const companyOptions = $derived(
+		data.companies.map((company) => ({
+			value: company.cik,
+			label: `${company.name}${company.ticker ? ` (${company.ticker})` : ''}`
+		}))
+	);
 
 	async function handleSignOut() {
 		await supabase.auth.signOut();
@@ -174,20 +182,13 @@
 					<form method="POST" action="?/addWatch" use:enhance>
 						<div class="vane-form-group">
 							<label for="company" class="vane-mono">Select Company</label>
-							<select
-								id="company"
-								name="cik"
-								class="vane-select"
+							<SearchableSelect
+								options={companyOptions}
 								bind:value={selectedCompany}
+								name="cik"
+								placeholder="Search for a company..."
 								required
-							>
-								<option value="">Choose a company...</option>
-								{#each data.companies as company}
-									<option value={company.cik}>
-										{company.name}{company.ticker ? ` (${company.ticker})` : ''}
-									</option>
-								{/each}
-							</select>
+							/>
 							<p class="vane-mono vane-gray" style="font-size: 12px; margin-top: 0.5rem;">
 								Select a company to start monitoring their SEC filings
 							</p>
@@ -257,6 +258,7 @@
 	.vane-dashboard {
 		min-height: 100vh;
 		padding: 8rem 2rem 4rem;
+		background: #f6f9fc;
 	}
 
 	.vane-dashboard-container {
@@ -268,9 +270,11 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-start;
-		margin-bottom: 4rem;
-		padding-bottom: 2rem;
-		border-bottom: 1px solid #e5e5e5;
+		margin-bottom: 3rem;
+		padding: 2rem;
+		background: white;
+		border-radius: 12px;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 	}
 
 	.vane-dashboard-headline {
@@ -282,18 +286,21 @@
 
 	.vane-plan-badge {
 		padding: 0.5rem 1rem;
-		border: 1px solid #e5e5e5;
+		border: 1px solid #e3e8ef;
 		text-transform: uppercase;
+		border-radius: 6px;
+		background: #f6f9fc;
 	}
 
 	.vane-plan-badge-individual {
-		border-color: var(--vane-yellow);
-		background: rgba(255, 235, 59, 0.1);
+		border-color: #ffd966;
+		background: #fffbea;
+		color: #8b7000;
 	}
 
 	.vane-plan-badge-enterprise {
-		border-color: var(--vane-black);
-		background: var(--vane-black);
+		border-color: #635bff;
+		background: #635bff;
 		color: white;
 	}
 
@@ -313,7 +320,9 @@
 	.vane-empty-state {
 		text-align: center;
 		padding: 4rem 2rem;
-		border: 1px dashed #ddd;
+		border: 2px dashed #e3e8ef;
+		border-radius: 12px;
+		background: white;
 		display: flex;
 		flex-direction: column;
 		gap: 1.5rem;
@@ -322,21 +331,25 @@
 
 	.vane-watches-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-		gap: 1.5rem;
+		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		gap: 1.25rem;
 	}
 
 	.vane-watch-card {
-		padding: 2rem;
-		border: 1px solid #e5e5e5;
+		padding: 1.75rem;
+		border: 1px solid #e3e8ef;
 		background: white;
 		cursor: pointer;
 		text-align: left;
-		transition: border-color 0.15s ease;
+		transition: all 0.2s ease;
+		border-radius: 12px;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 	}
 
 	.vane-watch-card:hover {
-		border-color: var(--vane-black);
+		border-color: #635bff;
+		box-shadow: 0 4px 12px rgba(99, 91, 255, 0.12);
+		transform: translateY(-2px);
 	}
 
 	.vane-watch-name {
@@ -359,16 +372,17 @@
 		justify-content: space-between;
 		align-items: center;
 		gap: 1rem;
+		border-radius: 10px;
 	}
 
 	.vane-upgrade-banner {
-		border: 1px solid var(--vane-yellow);
-		background: rgba(255, 235, 59, 0.05);
+		border: 1px solid #ffd966;
+		background: #fffbea;
 	}
 
 	.vane-error-banner {
-		border: 1px solid #ef4444;
-		background: rgba(239, 68, 68, 0.05);
+		border: 1px solid #f5b4b4;
+		background: #fef2f2;
 	}
 
 	.vane-upgrade-banner p,
@@ -380,7 +394,8 @@
 	.vane-flyout-overlay {
 		position: fixed;
 		inset: 0;
-		background: rgba(0, 0, 0, 0.5);
+		background: rgba(0, 0, 0, 0.4);
+		backdrop-filter: blur(2px);
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -396,17 +411,18 @@
 		padding: 2rem;
 		max-width: 500px;
 		width: 90%;
-		border: 1px solid var(--vane-black);
+		border-radius: 16px;
+		box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
 	}
 
 	.vane-flyout {
 		background: white;
 		width: 90%;
-		max-width: 500px;
+		max-width: 480px;
 		height: 100vh;
 		overflow-y: auto;
-		border-left: 1px solid var(--vane-black);
-		animation: slideIn 0.2s ease-out;
+		box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
+		animation: slideIn 0.3s cubic-bezier(0.32, 0.72, 0, 1);
 	}
 
 	@keyframes slideIn {
@@ -423,7 +439,7 @@
 		justify-content: space-between;
 		align-items: flex-start;
 		padding: 2rem;
-		border-bottom: 1px solid #e5e5e5;
+		border-bottom: 1px solid #e3e8ef;
 	}
 
 	.vane-flyout-title {
@@ -434,9 +450,9 @@
 	}
 
 	.vane-flyout-close {
-		background: none;
-		border: none;
-		font-size: 2rem;
+		background: #f6f9fc;
+		border: 1px solid #e3e8ef;
+		font-size: 1.5rem;
 		line-height: 1;
 		cursor: pointer;
 		padding: 0;
@@ -445,6 +461,14 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		border-radius: 6px;
+		color: var(--vane-gray);
+		transition: all 0.2s ease;
+	}
+
+	.vane-flyout-close:hover {
+		background: #e3e8ef;
+		color: var(--vane-black);
 	}
 
 	.vane-flyout-content {
@@ -505,15 +529,18 @@
 
 	.vane-input {
 		width: 100%;
-		padding: 0.75rem;
-		border: 1px solid #e5e5e5;
+		padding: 0.75rem 1rem;
+		border: 1px solid #e3e8ef;
 		font-family: var(--vane-mono);
 		font-size: 14px;
+		border-radius: 8px;
+		transition: all 0.2s ease;
 	}
 
 	.vane-input:focus {
 		outline: none;
-		border-color: var(--vane-black);
+		border-color: #635bff;
+		box-shadow: 0 0 0 3px rgba(99, 91, 255, 0.1);
 	}
 
 	.vane-modal-actions {
@@ -524,24 +551,29 @@
 
 	.vane-btn-secondary {
 		background: white;
-		color: var(--vane-black);
-		border: 1px solid var(--vane-black);
+		color: #425466;
+		border: 1px solid #e3e8ef;
+		border-radius: 8px;
+		transition: all 0.2s ease;
 	}
 
 	.vane-btn-secondary:hover {
-		background: var(--vane-black);
-		color: white;
+		background: #f6f9fc;
+		border-color: #c1c9d2;
 	}
 
 	.vane-btn-danger {
 		background: #ef4444;
 		color: white;
 		border: 1px solid #ef4444;
+		border-radius: 8px;
+		transition: all 0.2s ease;
 	}
 
 	.vane-btn-danger:hover {
 		background: #dc2626;
 		border-color: #dc2626;
+		box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
 	}
 
 	.vane-btn-ghost {
@@ -559,21 +591,6 @@
 
 	.vane-btn-ghost:hover {
 		color: var(--vane-black);
-	}
-
-	.vane-select {
-		width: 100%;
-		padding: 0.75rem;
-		border: 1px solid #e5e5e5;
-		font-family: var(--vane-mono);
-		font-size: 14px;
-		background: white;
-		cursor: pointer;
-	}
-
-	.vane-select:focus {
-		outline: none;
-		border-color: var(--vane-black);
 	}
 
 	.vane-flyout-actions {

@@ -111,6 +111,7 @@ CREATE POLICY "Users can manage own watchlists"
 3. **Optional**: Enable Google, GitHub, or Apple OAuth
 
 For Google OAuth:
+
 - Go to Google Cloud Console
 - Create OAuth 2.0 credentials
 - Add authorized redirect: `https://[YOUR-PROJECT-REF].supabase.co/auth/v1/callback`
@@ -119,6 +120,7 @@ For Google OAuth:
 ### 4. Get Your Keys
 
 Go to Settings > API and copy:
+
 - Project URL → `PUBLIC_SUPABASE_URL`
 - `anon` `public` key → `PUBLIC_SUPABASE_ANON_KEY`
 - `service_role` `secret` key → `SUPABASE_SERVICE_ROLE_KEY` (keep secret!)
@@ -136,6 +138,7 @@ Go to Settings > API and copy:
 ### 2. Get API Keys
 
 Go to Developers > API Keys:
+
 - Publishable key → `PUBLIC_STRIPE_PUBLISHABLE_KEY`
 - Secret key → `STRIPE_SECRET_KEY`
 
@@ -201,6 +204,7 @@ pnpm run dev
 ## Testing Stripe
 
 Use Stripe test cards:
+
 - Success: `4242 4242 4242 4242`
 - Requires authentication: `4000 0025 0000 3155`
 - Declined: `4000 0000 0000 9995`
@@ -217,7 +221,6 @@ Use any future date for expiry and any 3 digits for CVC.
 - [ ] Use Supabase Auth for authentication
 - [ ] Validate user permissions on server endpoints
 
-
 ## After deploying to Cloudflare Pages:
 
 Get your production URL (e.g., https://vane-app.pages.dev)
@@ -232,7 +235,7 @@ Update your custom domain (vane.app) when you set it up
 http://localhost:5173
 http://localhost:5174
 
-# Production Origins  
+# Production Origins
 https://vane.app
 https://YOUR-PROJECT-REF.supabase.co
 

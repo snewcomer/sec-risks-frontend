@@ -54,7 +54,9 @@
 
 				{#if data.watchlists.length === 0}
 					<div class="vane-empty-state">
-						<p class="vane-mono vane-gray">No watchlists yet. Create your first watchlist to start monitoring companies.</p>
+						<p class="vane-mono vane-gray">
+							No watchlists yet. Create your first watchlist to start monitoring companies.
+						</p>
 						<button class="vane-btn">Create Watchlist</button>
 					</div>
 				{:else}
@@ -75,7 +77,9 @@
 			<section class="vane-dashboard-section">
 				<h2 class="vane-section-heading">Recent Alerts</h2>
 				<div class="vane-empty-state">
-					<p class="vane-mono vane-gray">No alerts yet. We'll notify you when we detect risk escalations in your watchlists.</p>
+					<p class="vane-mono vane-gray">
+						No alerts yet. We'll notify you when we detect risk escalations in your watchlists.
+					</p>
 				</div>
 			</section>
 		</div>

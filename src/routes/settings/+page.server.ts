@@ -1,24 +1,16 @@
 import type { PageServerLoad, Actions } from './$types';
-import { supabaseAdmin } from '$lib/server/supabase';
 import { stripe } from '$lib/server/stripe';
 import { error, redirect } from '@sveltejs/kit';
 
-export const load: PageServerLoad = async ({ locals }) => {
-	const user = locals.user;
+export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase } }) => {
+	const { session, user } = await safeGetSession();
 
-	if (!user) {
-		return {
-			profile: null,
-			subscription: null
-		};
+	if (!session) {
+		throw redirect(303, '/sign-in');
 	}
 
 	// Get user profile
-	const { data: profile } = await supabaseAdmin
-		.from('profiles')
-		.select('*')
-		.eq('id', user.id)
-		.single();
+	const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
 
 	// Get subscription info if user has Stripe customer ID
 	let subscription = null;
@@ -38,14 +30,16 @@ export const load: PageServerLoad = async ({ locals }) => {
 	}
 
 	return {
+		session,
+		user,
 		profile,
 		subscription
 	};
 };
 
 export const actions: Actions = {
-	deleteAccount: async ({ locals }) => {
-		const user = locals.user;
+	deleteAccount: async ({ locals: { safeGetSession, supabase } }) => {
+		const { user } = await safeGetSession();
 
 		if (!user) {
 			throw error(401, 'Not authenticated');
@@ -53,7 +47,7 @@ export const actions: Actions = {
 
 		try {
 			// Delete user's profile and auth account
-			const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(user.id);
+			const { error: deleteError } = await supabase.auth.admin.deleteUser(user.id);
 
 			if (deleteError) {
 				throw deleteError;

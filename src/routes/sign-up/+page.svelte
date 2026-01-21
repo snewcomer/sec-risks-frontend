@@ -67,9 +67,7 @@
 	async function initiateCheckout() {
 		try {
 			const priceId =
-				selectedPlan === 'individual'
-					? import.meta.env.PUBLIC_STRIPE_INDIVIDUAL_PRICE_ID
-					: null;
+				selectedPlan === 'individual' ? import.meta.env.PUBLIC_STRIPE_INDIVIDUAL_PRICE_ID : null;
 
 			if (!priceId) {
 				// For enterprise, go to contact page
@@ -98,7 +96,10 @@
 
 <svelte:head>
 	<title>Sign Up - Vane</title>
-	<meta name="description" content="Create your Vane account and start monitoring SEC risk factors." />
+	<meta
+		name="description"
+		content="Create your Vane account and start monitoring SEC risk factors."
+	/>
 	<meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 

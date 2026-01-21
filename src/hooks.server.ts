@@ -1,29 +1,42 @@
-import { supabaseAdmin } from '$lib/server/supabase';
+import { createServerClient } from '@supabase/ssr';
 import { redirect, type Handle } from '@sveltejs/kit';
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 
 export const handle: Handle = async ({ event, resolve }) => {
-	// Get session token from cookie
-	const sessionToken = event.cookies.get('sb-access-token');
+	event.locals.supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+		cookies: {
+			getAll: () => event.cookies.getAll(),
+			setAll: (cookiesToSet) => {
+				cookiesToSet.forEach(({ name, value, options }) => {
+					event.cookies.set(name, value, { ...options, path: '/' });
+				});
+			}
+		}
+	});
 
-	if (sessionToken) {
-		// Verify and set user in locals
+	/**
+	 * Unlike `supabase.auth.getSession`, which is unsafe on the server because it
+	 * doesn't validate the JWT, this function validates the JWT by first calling
+	 * `getUser` and aborts early if the JWT signature is invalid.
+	 */
+	event.locals.safeGetSession = async () => {
 		const {
 			data: { user },
 			error
-		} = await supabaseAdmin.auth.getUser(sessionToken);
-
-		if (!error && user) {
-			event.locals.user = user;
+		} = await event.locals.supabase.auth.getUser();
+		if (error) {
+			return { session: null, user: null };
 		}
-	}
 
-	// Protect routes
-	const protectedRoutes = ['/risks', '/settings'];
-	const isProtectedRoute = protectedRoutes.some((route) => event.url.pathname.startsWith(route));
+		const {
+			data: { session }
+		} = await event.locals.supabase.auth.getSession();
+		return { session, user };
+	};
 
-	if (isProtectedRoute && !event.locals.user) {
-		throw redirect(303, `/sign-in?redirectTo=${encodeURIComponent(event.url.pathname)}`);
-	}
-
-	return resolve(event);
+	return resolve(event, {
+		filterSerializedResponseHeaders(name) {
+			return name === 'content-range' || name === 'x-supabase-api-version';
+		}
+	});
 };

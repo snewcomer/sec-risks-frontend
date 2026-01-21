@@ -1,8 +1,23 @@
 <script lang="ts">
+	import { supabase } from '$lib/supabase';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { PUBLIC_APP_URL } from '$env/static/public';
+
 	let email = $state('');
 	let password = $state('');
 	let error = $state('');
 	let loading = $state(false);
+
+	// Check for error in URL params
+	const urlError = $derived($page.url.searchParams.get('error'));
+	if (urlError) {
+		if (urlError === 'auth_failed') {
+			error = 'Authentication failed. Please try again.';
+		} else if (urlError === 'no_code') {
+			error = 'No authorization code received.';
+		}
+	}
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
@@ -10,22 +25,46 @@
 		error = '';
 
 		try {
-			// TODO: Implement actual authentication
-			const response = await fetch('/api/auth/sign-in', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ email, password })
+			const { data, error: signInError } = await supabase.auth.signInWithPassword({
+				email,
+				password
 			});
 
-			if (!response.ok) {
-				throw new Error('Invalid credentials');
-			}
+			if (signInError) throw signInError;
 
-			// Redirect on success
-			window.location.href = '/risks';
+			if (data.session) {
+				// Session is automatically stored in cookies by @supabase/ssr
+				// Redirect to dashboard
+				goto('/risks');
+			}
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Something went wrong';
 		} finally {
+			loading = false;
+		}
+	}
+
+	async function handleGoogleLogin() {
+		loading = true;
+		error = '';
+
+		try {
+			const { error: signInError } = await supabase.auth.signInWithOAuth({
+				provider: 'google',
+				options: {
+					redirectTo: `${PUBLIC_APP_URL}/auth/callback`,
+					queryParams: {
+						access_type: 'offline',
+						prompt: 'consent'
+					}
+				}
+			});
+
+			if (signInError) {
+				throw signInError;
+			}
+		} catch (err) {
+			error = err instanceof Error ? err.message : 'Something went wrong';
 			loading = false;
 		}
 	}
@@ -33,7 +72,10 @@
 
 <svelte:head>
 	<title>Sign In - Vane</title>
-	<meta name="description" content="Sign in to your Vane account to access SEC risk intelligence alerts." />
+	<meta
+		name="description"
+		content="Sign in to your Vane account to access SEC risk intelligence alerts."
+	/>
 	<meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
@@ -104,6 +146,19 @@
 					{loading ? 'Signing in...' : 'Sign In'}
 				</button>
 
+				<div class="vane-auth-divider">
+					<span class="vane-mono vane-gray">or</span>
+				</div>
+
+				<button
+					type="button"
+					class="vane-social-button"
+					onclick={handleGoogleLogin}
+					disabled={loading}
+				>
+					<span>Continue with Google</span>
+				</button>
+
 				<div class="vane-auth-footer">
 					<span class="vane-mono vane-gray">Don't have an account?</span>
 					<a href="/sign-up" class="vane-form-link vane-mono">Sign up</a>
@@ -112,3 +167,52 @@
 		</div>
 	</section>
 </div>
+
+<style>
+	.vane-auth-divider {
+		text-align: center;
+		padding: 1rem 0;
+		position: relative;
+	}
+
+	.vane-auth-divider::before,
+	.vane-auth-divider::after {
+		content: '';
+		position: absolute;
+		top: 50%;
+		width: 40%;
+		height: 1px;
+		background: #e5e5e5;
+	}
+
+	.vane-auth-divider::before {
+		left: 0;
+	}
+
+	.vane-auth-divider::after {
+		right: 0;
+	}
+
+	.vane-social-button {
+		font-family: var(--vane-mono);
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		font-size: 13px;
+		padding: 1.25rem;
+		background: white;
+		color: var(--vane-black);
+		border: 1px solid #ddd;
+		cursor: pointer;
+		transition: all 0.15s ease;
+		width: 100%;
+	}
+
+	.vane-social-button:hover:not(:disabled) {
+		border-color: var(--vane-black);
+	}
+
+	.vane-social-button:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+</style>

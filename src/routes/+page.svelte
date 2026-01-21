@@ -91,8 +91,8 @@
 			<h1 class="vane-headline">Risk clarity</h1>
 			<p class="vane-subhead">
 				SEC filings contain critical risk signals buried in legal prose. Vane Risks detects
-				meaningful escalations in 10-K and 10-Q disclosures and alerts, giving you informed
-				decision making power.
+				meaningful escalations in 10-K and 10-Q disclosures and alerts, giving you informed decision
+				making power.
 			</p>
 			<div class="vane-target">
 				<div class="vane-target-ring"></div>
@@ -121,8 +121,8 @@
 				<p class="vane-section-text">
 					Risk Factors sections grow longer every year. The language shifts subtly— hypothetical
 					becomes factual, generic becomes specific, contingent becomes realized. These semantic
-					shifts signal material changes, but they're invisible to keyword searches and impossible to
-					track manually across hundreds of filings.
+					shifts signal material changes, but they're invisible to keyword searches and impossible
+					to track manually across hundreds of filings.
 				</p>
 				<div class="vane-features">
 					<div class="vane-feature">
@@ -137,8 +137,8 @@
 						<div class="vane-feature-num">02</div>
 						<div class="vane-feature-title">Score</div>
 						<div class="vane-feature-text">
-							Materiality scoring based on magnitude, novelty, and deviation from historical patterns.
-							Normalized against industry peers.
+							Materiality scoring based on magnitude, novelty, and deviation from historical
+							patterns. Normalized against industry peers.
 						</div>
 					</div>
 					<div class="vane-feature">

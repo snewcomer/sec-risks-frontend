@@ -140,11 +140,7 @@
 						{/each}
 					</ul>
 
-					<a
-						href={plan.href}
-						class="vane-plan-cta"
-						class:vane-plan-cta-outline={plan.highlighted}
-					>
+					<a href={plan.href} class="vane-plan-cta" class:vane-plan-cta-outline={plan.highlighted}>
 						{plan.cta}
 					</a>
 				</article>

@@ -165,7 +165,9 @@
 								<form method="POST" action="?/deleteAccount" use:enhance>
 									<button type="submit" class="vane-btn-danger">Yes, Delete My Account</button>
 								</form>
-								<button class="vane-btn" onclick={() => (showDeleteConfirm = false)}> Cancel </button>
+								<button class="vane-btn" onclick={() => (showDeleteConfirm = false)}>
+									Cancel
+								</button>
 							</div>
 						</div>
 					{/if}

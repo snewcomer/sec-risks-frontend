@@ -13,11 +13,15 @@ export type Profile = {
 	updated_at: string;
 };
 
-export type Watchlist = {
+export type UserWatch = {
 	id: string;
 	user_id: string;
-	name: string;
-	companies: string[];
+	cik: string;
 	created_at: string;
-	updated_at: string;
+};
+
+export type Company = {
+	cik: string;
+	name: string;
+	// Add other company fields as needed
 };

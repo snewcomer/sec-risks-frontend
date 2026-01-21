@@ -1,35 +1,32 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { createCheckoutSession, stripe } from '$lib/server/stripe';
-import { supabaseAdmin } from '$lib/server/supabase';
 import { PUBLIC_APP_URL } from '$env/static/public';
+import { STRIPE_INDIVIDUAL_PRICE_ID } from '$env/static/private';
 
-export const POST: RequestHandler = async ({ request, cookies }) => {
+export const POST: RequestHandler = async ({ request, locals: { safeGetSession, supabase } }) => {
 	try {
-		const { priceId, plan } = await request.json();
+		const { plan } = await request.json();
 
-		if (!priceId) {
-			throw error(400, 'Price ID is required');
+		// Use the environment variable for the actual Stripe price ID
+		const actualPriceId = STRIPE_INDIVIDUAL_PRICE_ID;
+
+		if (!actualPriceId || actualPriceId === 'your_individual_price_id') {
+			console.error(
+				'Stripe price ID not configured. Please set STRIPE_INDIVIDUAL_PRICE_ID in .env'
+			);
+			throw error(500, 'Stripe not configured. Please contact support.');
 		}
 
-		// Get session token from cookie
-		const sessionToken = cookies.get('sb-access-token');
-		if (!sessionToken) {
+		// Get authenticated user
+		const { user } = await safeGetSession();
+
+		if (!user) {
 			throw error(401, 'Not authenticated');
 		}
 
-		// Get user from Supabase
-		const {
-			data: { user },
-			error: authError
-		} = await supabaseAdmin.auth.getUser(sessionToken);
-
-		if (authError || !user) {
-			throw error(401, 'Invalid session');
-		}
-
 		// Get or create profile
-		const { data: profile } = await supabaseAdmin
+		const { data: profile } = await supabase
 			.from('profiles')
 			.select('*')
 			.eq('id', user.id)
@@ -53,15 +50,12 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 			customerId = customer.id;
 
 			// Update profile with stripe customer ID
-			await supabaseAdmin
-				.from('profiles')
-				.update({ stripe_customer_id: customerId })
-				.eq('id', user.id);
+			await supabase.from('profiles').update({ stripe_customer_id: customerId }).eq('id', user.id);
 		}
 
 		// Create checkout session
 		const session = await createCheckoutSession({
-			priceId,
+			priceId: actualPriceId,
 			customerId,
 			successUrl: `${PUBLIC_APP_URL}/risks?success=true`,
 			cancelUrl: `${PUBLIC_APP_URL}/pricing?canceled=true`,

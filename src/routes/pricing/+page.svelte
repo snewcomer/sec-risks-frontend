@@ -1,12 +1,17 @@
 <script lang="ts">
+	import type { PageData } from './$types';
+
+	let { data }: { data: PageData } = $props();
+
 	interface Plan {
 		name: string;
 		price: string;
 		period?: string;
 		features: string[];
 		cta: string;
-		href: string;
+		href?: string;
 		highlighted?: boolean;
+		priceId?: string;
 	}
 
 	const plans: Plan[] = [
@@ -22,7 +27,8 @@
 				'Industry benchmarking'
 			],
 			cta: 'Get Started',
-			href: '/sign-up?plan=individual'
+			href: '/sign-up?plan=individual',
+			priceId: 'price_individual'
 		},
 		{
 			name: 'Enterprise',
@@ -39,6 +45,25 @@
 			highlighted: true
 		}
 	];
+
+	async function handleUpgrade() {
+		try {
+			const response = await fetch('/api/create-checkout-session', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					plan: 'individual'
+				})
+			});
+
+			const { url } = await response.json();
+			if (url) {
+				window.location.href = url;
+			}
+		} catch (error) {
+			console.error('Error creating checkout session:', error);
+		}
+	}
 
 	const faqs = [
 		{
@@ -90,8 +115,12 @@
 			</a>
 		</div>
 		<div class="vane-nav-right">
-			<a href="/sign-in" class="vane-btn">Sign In</a>
-			<a href="/comparison" class="vane-mono vane-gray vane-nav-link">Compare</a>
+			{#if data.session}
+				<a href="/risks" class="vane-btn">Home</a>
+			{:else}
+				<a href="/sign-in" class="vane-btn">Sign In</a>
+				<a href="/comparison" class="vane-mono vane-gray vane-nav-link">Compare</a>
+			{/if}
 		</div>
 	</nav>
 
@@ -140,9 +169,23 @@
 						{/each}
 					</ul>
 
-					<a href={plan.href} class="vane-plan-cta" class:vane-plan-cta-outline={plan.highlighted}>
-						{plan.cta}
-					</a>
+					{#if data.session && plan.priceId}
+						<button
+							onclick={handleUpgrade}
+							class="vane-plan-cta"
+							class:vane-plan-cta-outline={plan.highlighted}
+						>
+							{plan.cta}
+						</button>
+					{:else}
+						<a
+							href={plan.href}
+							class="vane-plan-cta"
+							class:vane-plan-cta-outline={plan.highlighted}
+						>
+							{plan.cta}
+						</a>
+					{/if}
 				</article>
 			{/each}
 		</div>
@@ -168,7 +211,11 @@
 				Join investors and analysts who trust Vane for SEC risk intelligence.
 			</p>
 			<div class="vane-cta-buttons">
-				<a href="/sign-up?plan=individual" class="vane-btn-primary">Get Started</a>
+				{#if data.session}
+					<button onclick={handleUpgrade} class="vane-btn-primary"> Get Started </button>
+				{:else}
+					<a href="/sign-up?plan=individual" class="vane-btn-primary">Get Started</a>
+				{/if}
 				<a href="/comparison" class="vane-btn-secondary">See How It Works</a>
 			</div>
 		</div>

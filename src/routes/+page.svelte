@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import type { PageData } from './$types';
+
+	let { data }: { data: PageData } = $props();
 
 	let heroVisible = $state(false);
 
@@ -80,8 +83,12 @@
 			<span class="vane-mono vane-gray">SEC Risk Intelligence</span>
 		</div>
 		<div class="vane-nav-right">
-			<a href="/sign-in" class="vane-btn">Sign In</a>
-			<a href="/pricing" class="vane-mono vane-gray vane-nav-link">Pricing</a>
+			{#if data.session}
+				<a href="/risks" class="vane-btn">Home</a>
+			{:else}
+				<a href="/sign-in" class="vane-btn">Sign In</a>
+				<a href="/pricing" class="vane-mono vane-gray vane-nav-link">Pricing</a>
+			{/if}
 		</div>
 	</nav>
 

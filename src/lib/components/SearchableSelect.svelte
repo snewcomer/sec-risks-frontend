@@ -21,8 +21,10 @@
 	let isOpen = $state(false);
 	let searchQuery = $state('');
 	let highlightedIndex = $state(-1);
-	let inputRef: HTMLInputElement;
-	let dropdownRef: HTMLDivElement;
+
+	// FIX: DOM references should be $state in Svelte 5 to handle binding updates correctly
+	let inputRef = $state<HTMLInputElement>();
+	let dropdownRef = $state<HTMLDivElement>();
 
 	const filteredOptions = $derived(
 		searchQuery.trim() === ''
@@ -39,7 +41,8 @@
 
 	function handleInputBlur(e: FocusEvent) {
 		// Don't close if clicking within the dropdown
-		if (dropdownRef && dropdownRef.contains(e.relatedTarget as Node)) {
+		// We use optional chaining here in case dropdownRef is undefined
+		if (dropdownRef?.contains(e.relatedTarget as Node)) {
 			return;
 		}
 		setTimeout(() => {
@@ -96,7 +99,6 @@
 	}
 </script>
 
-<!-- Hidden input to submit the actual value in forms -->
 <input type="hidden" {name} {value} {required} />
 
 <div class="searchable-select">

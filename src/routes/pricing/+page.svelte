@@ -67,14 +67,14 @@
 
 	const faqs = [
 		{
-			question: 'How does the trial work?',
+			question: 'How does this work?',
 			answer:
-				'Start with a 14-day free trial. No credit card required. Full access to all features in your plan.'
+				'You get to monitor SEC Risk Factors for your selected companies. We analyze new filings and alert you to significant risk disclosures.'
 		},
 		{
-			question: 'Can I change plans?',
+			question: 'How do I get started',
 			answer:
-				'Yes. Upgrade or downgrade at any time. Changes take effect at the next billing cycle.'
+				'Create an account and you can start monitoring a single company for free. Upgrade to the Individual plan to monitor up to 100 companies.'
 		},
 		{
 			question: 'What about enterprise?',

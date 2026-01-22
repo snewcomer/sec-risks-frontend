@@ -198,7 +198,7 @@
 					required
 					aria-label="Email address"
 				/>
-				<button type="submit" class="vane-submit">Get Access →</button>
+				<button type="submit" class="vane-submit">Get access</button>
 			</form>
 		</div>
 	</section>

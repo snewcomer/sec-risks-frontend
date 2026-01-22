@@ -11,7 +11,7 @@ export const POST: RequestHandler = async ({ request, locals: { safeGetSession, 
 		// Use the environment variable for the actual Stripe price ID
 		const actualPriceId = STRIPE_INDIVIDUAL_PRICE_ID;
 
-		if (!actualPriceId || actualPriceId === 'your_individual_price_id') {
+		if (!actualPriceId) {
 			console.error(
 				'Stripe price ID not configured. Please set STRIPE_INDIVIDUAL_PRICE_ID in .env'
 			);

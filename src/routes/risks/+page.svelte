@@ -62,6 +62,14 @@
 		showDetailsFlyout = false;
 		selectedWatch = null;
 	}
+
+	// Helper to handle keyboard closing of modals
+	function handleOverlayKeydown(e: KeyboardEvent, closeFn: () => void) {
+		if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+			e.preventDefault();
+			closeFn();
+		}
+	}
 </script>
 
 <svelte:head>
@@ -71,7 +79,6 @@
 </svelte:head>
 
 <div class="vane-home">
-	<!-- Navigation -->
 	<nav class="vane-nav">
 		<div class="vane-nav-left">
 			<a href="/" class="vane-nav-brand">
@@ -85,10 +92,8 @@
 		</div>
 	</nav>
 
-	<!-- Dashboard -->
 	<section class="vane-dashboard">
 		<div class="vane-dashboard-container">
-			<!-- Header -->
 			<header class="vane-dashboard-header">
 				<div>
 					<h1 class="vane-dashboard-headline">SEC Risks</h1>
@@ -101,7 +106,6 @@
 				</div>
 			</header>
 
-			<!-- Company Watches -->
 			<section class="vane-dashboard-section">
 				<div
 					style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;"
@@ -144,7 +148,6 @@
 				{/if}
 			</section>
 
-			<!-- Recent Alerts Placeholder -->
 			<section class="vane-dashboard-section">
 				<h2 class="vane-section-heading">Recent Alerts</h2>
 				<div class="vane-empty-state">
@@ -157,15 +160,15 @@
 		</div>
 	</section>
 
-	<!-- Add Watch Flyout -->
 	{#if showAddFlyout}
-		<div class="vane-flyout-overlay" onclick={closeAddFlyout}>
-			<aside
-				class="vane-flyout"
-				onclick={(e) => e.stopPropagation()}
-				role="dialog"
-				aria-modal="true"
-			>
+		<div
+			class="vane-flyout-overlay"
+			onclick={closeAddFlyout}
+			onkeydown={(e) => handleOverlayKeydown(e, closeAddFlyout)}
+			role="button"
+			tabindex="0"
+		>
+			<div class="vane-flyout" onclick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
 				<div class="vane-flyout-header">
 					<h2 class="vane-flyout-title">Add Company Watch</h2>
 					<button
@@ -189,9 +192,6 @@
 								placeholder="Search for a company..."
 								required
 							/>
-							<p class="vane-mono vane-gray" style="font-size: 12px; margin-top: 0.5rem;">
-								Select a company to start monitoring their SEC filings
-							</p>
 						</div>
 						<div class="vane-flyout-actions">
 							<button type="button" class="vane-btn vane-btn-secondary" onclick={closeAddFlyout}>
@@ -201,19 +201,19 @@
 						</div>
 					</form>
 				</div>
-			</aside>
+			</div>
 		</div>
 	{/if}
 
-	<!-- Watch Details Flyout -->
 	{#if showDetailsFlyout && selectedWatch}
-		<div class="vane-flyout-overlay" onclick={closeDetailsFlyout}>
-			<aside
-				class="vane-flyout"
-				onclick={(e) => e.stopPropagation()}
-				role="dialog"
-				aria-modal="true"
-			>
+		<div
+			class="vane-flyout-overlay"
+			onclick={closeDetailsFlyout}
+			onkeydown={(e) => handleOverlayKeydown(e, closeDetailsFlyout)}
+			role="button"
+			tabindex="0"
+		>
+			<div class="vane-flyout" onclick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
 				<div class="vane-flyout-header">
 					<h2 class="vane-flyout-title">
 						{selectedWatch.companies?.name || 'Unknown Company'}
@@ -249,7 +249,7 @@
 						</form>
 					</div>
 				</div>
-			</aside>
+			</div>
 		</div>
 	{/if}
 </div>
@@ -400,6 +400,8 @@
 		align-items: center;
 		justify-content: center;
 		z-index: 1000;
+		/* Reset button styles since we added role=button/keyboard access but it's a div */
+		cursor: pointer;
 	}
 
 	.vane-flyout-overlay {
@@ -423,6 +425,7 @@
 		overflow-y: auto;
 		box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
 		animation: slideIn 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+		cursor: default; /* Reset cursor inside the flyout */
 	}
 
 	@keyframes slideIn {

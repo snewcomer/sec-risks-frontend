@@ -89,7 +89,7 @@
 			</a>
 		</div>
 		<div class="vane-nav-right">
-			<a href="/" class="vane-mono vane-gray vane-nav-link">← Back to Home</a>
+			<a href="/" class="vane-mono vane-gray vane-nav-link">← Home</a>
 		</div>
 	</nav>
 
@@ -205,6 +205,7 @@
 		cursor: pointer;
 		transition: all 0.15s ease;
 		width: 100%;
+		border-radius: 6px;
 	}
 
 	.vane-social-button:hover:not(:disabled) {

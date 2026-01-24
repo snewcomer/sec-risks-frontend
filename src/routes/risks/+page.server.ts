@@ -19,6 +19,22 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase 
 		supabase.from('companies').select('cik, name, ticker').order('name', { ascending: true })
 	]);
 
+	// Fetch filings separately for each watch
+	if (watchesResult.data && watchesResult.data.length > 0) {
+		const watchesWithFilings = await Promise.all(
+			watchesResult.data.map(async (watch) => {
+				const { data: filings } = await supabase
+					.from('sec_filings')
+					.select('filing_date')
+					.eq('cik', watch.cik)
+					.order('filing_date', { ascending: false })
+					.limit(1);
+				return { ...watch, filings: filings || [] };
+			})
+		);
+		watchesResult.data = watchesWithFilings;
+	}
+
 	// Log actual DB errors for monitoring, but don't crash the UI
 	if (profileResult.error) console.error('Load Error (Profile):', profileResult.error);
 	if (watchesResult.error) console.error('Load Error (Watches):', watchesResult.error);
@@ -59,7 +75,7 @@ export const actions: Actions = {
 
 		if (plan === 'free' && count >= 1) {
 			return fail(403, {
-				error: 'Free plan is limited to 1 company watch. Upgrade to watch more companies.',
+				error: 'Free plan is limited to 1 company watch. Upgrade to keep an eye on more companies.',
 				needsUpgrade: true
 			});
 		}

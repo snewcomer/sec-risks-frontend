@@ -130,7 +130,7 @@ Go to Settings > API and copy:
 ### 1. Create Products
 
 1. Go to https://dashboard.stripe.com/products
-2. Create "Individual Plan":
+2. Create "Professional plan":
    - Name: Individual
    - Price: $20 every 6 months
    - Copy Price ID → `STRIPE_INDIVIDUAL_PRICE_ID`
@@ -228,7 +228,7 @@ Go back to Google Cloud Console
 Add your production domain to:
 Authorized JavaScript origins
 Authorized redirect URIs (with /auth/callback)
-Update your custom domain (vane.app) when you set it up
+Update your custom domain (vanerisk.com) when you set it up
 
 ```
 # Local Origins
@@ -236,7 +236,7 @@ http://localhost:5173
 http://localhost:5174
 
 # Production Origins
-https://vane.app
+https://vanerisk.com
 https://YOUR-PROJECT-REF.supabase.co
 
 # Local Redirects
@@ -244,6 +244,6 @@ http://localhost:5173/auth/callback
 https://YOUR-PROJECT-REF.supabase.co/auth/v1/callback
 
 # Production Redirects
-https://vane.app/auth/callback
+https://vanerisk.com/auth/callback
 https://YOUR-PROJECT-REF.supabase.co/auth/v1/callback
 ```

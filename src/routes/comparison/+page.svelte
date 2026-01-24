@@ -22,11 +22,6 @@
 			competitor: 'Generic descriptions'
 		},
 		{
-			label: 'Temporal context',
-			vane: 'Before/after comparisons',
-			competitor: 'Point-in-time snapshot'
-		},
-		{
 			label: 'Industry benchmarks',
 			vane: 'Peer-normalized scoring',
 			competitor: 'No context'
@@ -71,7 +66,7 @@
 		name="keywords"
 		content="SEC filing analysis, AI comparison, risk intelligence, financial analysis tools"
 	/>
-	<link rel="canonical" href="https://vane.app/comparison" />
+	<link rel="canonical" href="https://vanerisk.com/comparison" />
 
 	<!-- Open Graph -->
 	<meta property="og:title" content="Compare - Vane vs Generic AI" />
@@ -79,7 +74,7 @@
 		property="og:description"
 		content="See how Vane's specialized SEC risk analysis compares to generic AI tools. Signal vs noise."
 	/>
-	<meta property="og:url" content="https://vane.app/comparison" />
+	<meta property="og:url" content="https://vanerisk.com/comparison" />
 </svelte:head>
 
 <div class="vane-home">

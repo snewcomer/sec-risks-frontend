@@ -75,10 +75,6 @@ body {
 	gap: 1.5rem;
 }
 
-.vane-nav-link {
-	text-decoration: none;
-}
-
 /* Button */
 .vane-btn {
 	font-family: var(--vane-mono);
@@ -92,6 +88,7 @@ body {
 	cursor: pointer;
 	transition: all 0.15s ease;
 	text-decoration: none;
+	border-radius: 6px;
 }
 
 .vane-btn:hover {
@@ -220,7 +217,7 @@ body {
 
 /* Sections */
 .vane-section {
-	padding: 6rem 2rem;
+	padding: 4rem 2rem;
 	border-top: 1px solid #e5e5e5;
 }
 
@@ -232,6 +229,11 @@ body {
 
 .vane-section-yellow {
 	background: var(--vane-yellow-soft);
+	border-top: none;
+}
+
+.vane-section-cta {
+	background: #f6f9fc;
 	border-top: none;
 }
 
@@ -425,6 +427,7 @@ body {
 	color: white;
 	cursor: pointer;
 	transition: all 0.15s ease;
+	border-radius: 6px;
 }
 
 .vane-submit:hover {
@@ -518,7 +521,7 @@ body {
 	padding: 1rem;
 	background: #fee;
 	border: 1px solid #fcc;
-	border-radius: 4px;
+	border-radius: 6px;
 }
 
 .vane-auth-error .vane-mono {
@@ -545,6 +548,7 @@ body {
 	border: 1px solid #ddd;
 	background: white;
 	transition: border-color 0.15s ease;
+	border-radius: 6px;
 }
 
 .vane-form-input:focus {
@@ -586,6 +590,7 @@ body {
 	cursor: pointer;
 	transition: all 0.15s ease;
 	margin-top: 0.5rem;
+	border-radius: 6px;
 }
 
 .vane-auth-button:hover:not(:disabled) {
@@ -634,6 +639,10 @@ body {
 	color: #b8860b;
 }
 
+.vane-orange-text {
+	color: #ff7f0e;
+}
+
 .vane-plans-subhead {
 	font-family: var(--vane-mono);
 	text-transform: uppercase;
@@ -645,7 +654,7 @@ body {
 
 .vane-plans-section {
 	padding: 4rem 2rem;
-	background: var(--vane-light);
+	background: #fafafa;
 }
 
 .vane-plans-grid {
@@ -658,44 +667,48 @@ body {
 
 .vane-plan-card {
 	background: white;
-	border: 1px solid #e5e5e5;
+	border: 2px solid #e5e5e5;
 	padding: 2.5rem;
 	display: flex;
 	flex-direction: column;
 	gap: 2rem;
-	transition: border-color 0.2s ease;
+	transition: all 0.2s ease;
+	border-radius: 12px;
+	position: relative;
 }
 
 .vane-plan-card:hover {
-	border-color: var(--vane-black);
+	border-color: #ccc;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.vane-plan-card-dark {
-	background: var(--vane-black);
-	border-color: var(--vane-black);
-	color: white;
+.vane-plan-card-highlighted {
+	border-color: #ff7f0e;
+	box-shadow: 0 4px 20px rgba(255, 127, 14, 0.15);
 }
 
-.vane-plan-card-dark:hover {
-	border-color: var(--vane-yellow);
+.vane-plan-card-highlighted:hover {
+	border-color: #ff7f0e;
+	box-shadow: 0 8px 30px rgba(255, 127, 14, 0.2);
 }
 
 .vane-plan-header {
 	display: flex;
 	flex-direction: column;
-	gap: 0.5rem;
+	gap: 0.75rem;
 }
 
-.vane-plan-label {
+.vane-plan-badge {
 	font-family: var(--vane-mono);
 	text-transform: uppercase;
-	letter-spacing: 0.15em;
+	letter-spacing: 0.1em;
 	font-size: 11px;
-	color: var(--vane-gray);
-}
-
-.vane-plan-card-dark .vane-plan-label {
-	color: #888;
+	color: #ff7f0e;
+	background: rgba(255, 127, 14, 0.1);
+	padding: 0.4rem 0.75rem;
+	border-radius: 4px;
+	align-self: flex-start;
+	font-weight: 500;
 }
 
 .vane-plan-name {
@@ -703,55 +716,37 @@ body {
 	font-size: 2rem;
 	font-weight: 400;
 	margin: 0;
+	color: var(--vane-black);
 }
 
 .vane-plan-price {
 	display: flex;
 	align-items: baseline;
-	gap: 0.25rem;
+	gap: 0.5rem;
 	padding: 1.5rem 0;
-	border-top: 1px solid #e5e5e5;
 	border-bottom: 1px solid #e5e5e5;
-}
-
-.vane-plan-card-dark .vane-plan-price {
-	border-color: #333;
-}
-
-.vane-plan-currency {
-	font-family: var(--vane-mono);
-	font-size: 1.5rem;
-	color: var(--vane-gray);
-}
-
-.vane-plan-card-dark .vane-plan-currency {
-	color: #888;
 }
 
 .vane-plan-amount {
 	font-family: var(--vane-display);
-	font-size: 4rem;
+	font-size: 3.5rem;
 	font-weight: 400;
 	line-height: 1;
+	color: var(--vane-black);
 }
 
 .vane-plan-period {
 	font-family: var(--vane-mono);
-	text-transform: uppercase;
-	letter-spacing: 0.1em;
-	font-size: 13px;
+	font-size: 14px;
 	color: var(--vane-gray);
-	margin-left: 0.5rem;
-}
-
-.vane-plan-card-dark .vane-plan-period {
-	color: #888;
+	align-self: center;
 }
 
 .vane-plan-custom {
 	font-family: var(--vane-display);
 	font-size: 2.5rem;
-	font-style: italic;
+	font-weight: 400;
+	color: var(--vane-black);
 }
 
 .vane-plan-features {
@@ -766,60 +761,55 @@ body {
 
 .vane-plan-feature {
 	display: flex;
-	align-items: flex-start;
-	gap: 1rem;
+	align-items: center;
+	gap: 0.75rem;
 	font-family: var(--vane-mono);
-	font-size: 13px;
-	text-transform: uppercase;
-	letter-spacing: 0.05em;
+	font-size: 14px;
 	line-height: 1.6;
+	color: var(--vane-black);
 }
 
 .vane-plan-check {
-	color: var(--vane-yellow);
-	font-weight: 700;
+	color: #ff7f0e;
 	flex-shrink: 0;
-}
-
-.vane-plan-card:not(.vane-plan-card-dark) .vane-plan-feature {
-	color: var(--vane-gray);
-}
-
-.vane-plan-card-dark .vane-plan-feature {
-	color: #999;
+	width: 20px;
+	height: 20px;
 }
 
 .vane-plan-cta {
 	display: block;
 	font-family: var(--vane-mono);
 	text-transform: uppercase;
-	letter-spacing: 0.1em;
-	font-size: 13px;
+	letter-spacing: 0.05em;
+	font-size: 14px;
 	text-align: center;
-	padding: 1.25rem 2rem;
-	background: var(--vane-yellow);
-	color: var(--vane-black);
+	padding: 1rem 2rem;
+	background: var(--vane-black);
+	color: white;
 	text-decoration: none;
 	transition: all 0.15s ease;
-	border: 1px solid var(--vane-yellow);
+	border: 2px solid var(--vane-black);
+	border-radius: 8px;
+	cursor: pointer;
+	font-weight: 500;
 }
 
 .vane-plan-cta:hover {
-	background: var(--vane-black);
-	color: white;
-	border-color: var(--vane-black);
+	background: #1a1a1a;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.vane-plan-cta-outline {
-	background: transparent;
-	border: 1px solid #555;
+.vane-plan-cta-highlighted {
+	background: #ff7f0e;
+	border-color: #ff7f0e;
 	color: white;
 }
 
-.vane-plan-cta-outline:hover {
-	background: var(--vane-yellow);
-	border-color: var(--vane-yellow);
-	color: var(--vane-black);
+.vane-plan-cta-highlighted:hover {
+	background: #e56f0a;
+	border-color: #e56f0a;
+	box-shadow: 0 4px 12px rgba(255, 127, 14, 0.3);
 }
 
 .vane-plans-faq {
@@ -889,6 +879,7 @@ body {
 	text-decoration: none;
 	border: 1px solid var(--vane-black);
 	transition: all 0.15s ease;
+	border-radius: 6px;
 }
 
 .vane-btn-primary:hover {
@@ -907,6 +898,7 @@ body {
 	text-decoration: none;
 	border: 1px solid var(--vane-black);
 	transition: all 0.15s ease;
+	border-radius: 6px;
 }
 
 .vane-btn-secondary:hover {

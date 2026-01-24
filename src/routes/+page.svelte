@@ -24,7 +24,7 @@
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://vane.app/" />
+	<meta property="og:url" content="https://vanerisk.com/" />
 	<meta property="og:title" content="Vane - SEC Risk Intelligence & Filing Alerts" />
 	<meta
 		property="og:description"
@@ -33,7 +33,7 @@
 
 	<!-- Twitter -->
 	<meta property="twitter:card" content="summary_large_image" />
-	<meta property="twitter:url" content="https://vane.app/" />
+	<meta property="twitter:url" content="https://vanerisk.com/" />
 	<meta property="twitter:title" content="Vane - SEC Risk Intelligence & Filing Alerts" />
 	<meta
 		property="twitter:description"
@@ -41,7 +41,7 @@
 	/>
 
 	<!-- Canonical -->
-	<link rel="canonical" href="https://vane.app/" />
+	<link rel="canonical" href="https://vanerisk.com/" />
 
 	<!-- Structured Data -->
 	{@html `<script type="application/ld+json">
@@ -70,7 +70,7 @@
 		"@type": "Organization",
 		"name": "Vane",
 		"description": "SEC Risk Intelligence platform",
-		"url": "https://vane.app"
+		"url": "https://vanerisk.com"
 	}
 	</script>`}
 </svelte:head>

@@ -10,20 +10,18 @@
 		features: string[];
 		cta: string;
 		href?: string;
-		highlighted?: boolean;
 		priceId?: string;
 	}
 
 	const plans: Plan[] = [
 		{
-			name: 'Individual',
+			name: 'Professional',
 			price: '$20',
 			period: '/semi annual',
 			features: [
 				'SEC Risk coverage',
 				'10-K & 10-Q monitoring',
 				'Escalation alerts',
-				'Before/after comparisons',
 				'Industry benchmarking'
 			],
 			cta: 'Get Started',
@@ -34,15 +32,14 @@
 			name: 'Enterprise',
 			price: 'Custom',
 			features: [
-				'Everything in Individual',
+				'Everything in Professional',
 				'Unlimited watchlists',
 				'API access',
 				'Custom integrations',
 				'Dedicated support'
 			],
 			cta: 'Contact Us',
-			href: '/contact',
-			highlighted: true
+			href: '/contact'
 		}
 	];
 
@@ -74,7 +71,7 @@
 		{
 			question: 'How do I get started',
 			answer:
-				'Create an account and you can start monitoring a single company for free. Upgrade to the Individual plan to monitor up to 100 companies.'
+				'Create an account and you can start monitoring a single company for free. Upgrade to the Professional plan to monitor up to 100 companies.'
 		},
 		{
 			question: 'What about enterprise?',
@@ -94,7 +91,7 @@
 		name="keywords"
 		content="SEC filing alerts pricing, risk intelligence pricing, 10-K monitoring cost"
 	/>
-	<link rel="canonical" href="https://vane.app/pricing" />
+	<link rel="canonical" href="https://vanerisk.com/pricing" />
 
 	<!-- Open Graph -->
 	<meta property="og:title" content="Pricing - Vane SEC Risk Intelligence" />
@@ -102,7 +99,7 @@
 		property="og:description"
 		content="Simple, transparent pricing for SEC risk intelligence. Start with a free trial."
 	/>
-	<meta property="og:url" content="https://vane.app/pricing" />
+	<meta property="og:url" content="https://vanerisk.com/pricing" />
 </svelte:head>
 
 <div class="vane-home">
@@ -129,7 +126,7 @@
 		<div class="vane-plans-header-content">
 			<h1 class="vane-plans-headline">
 				Simple pricing.<br />
-				<span class="vane-yellow-text">Clear value.</span>
+				<span class="vane-orange-text">Clear value.</span>
 			</h1>
 			<p class="vane-plans-subhead">
 				Get started with SEC risk intelligence. Affordable for individuals, scalable for
@@ -142,9 +139,8 @@
 	<section class="vane-plans-section">
 		<div class="vane-plans-grid">
 			{#each plans as plan}
-				<article class="vane-plan-card" class:vane-plan-card-dark={plan.highlighted}>
+				<article class="vane-plan-card">
 					<header class="vane-plan-header">
-						<span class="vane-plan-label">Plan</span>
 						<h2 class="vane-plan-name">{plan.name}</h2>
 					</header>
 
@@ -152,8 +148,7 @@
 						{#if plan.price === 'Custom'}
 							<span class="vane-plan-custom">Custom</span>
 						{:else}
-							<span class="vane-plan-currency">$</span>
-							<span class="vane-plan-amount">{plan.price.replace('$', '')}</span>
+							<span class="vane-plan-amount">{plan.price}</span>
 							{#if plan.period}
 								<span class="vane-plan-period">{plan.period}</span>
 							{/if}
@@ -163,26 +158,33 @@
 					<ul class="vane-plan-features">
 						{#each plan.features as feature}
 							<li class="vane-plan-feature">
-								<span class="vane-plan-check">+</span>
+								<svg
+									class="vane-plan-check"
+									width="20"
+									height="20"
+									viewBox="0 0 20 20"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<path
+										d="M16.6667 5L7.50004 14.1667L3.33337 10"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									/>
+								</svg>
 								<span>{feature}</span>
 							</li>
 						{/each}
 					</ul>
 
 					{#if data.session && plan.priceId}
-						<button
-							onclick={handleUpgrade}
-							class="vane-plan-cta"
-							class:vane-plan-cta-outline={plan.highlighted}
-						>
+						<button onclick={handleUpgrade} class="vane-plan-cta">
 							{plan.cta}
 						</button>
 					{:else}
-						<a
-							href={plan.href}
-							class="vane-plan-cta"
-							class:vane-plan-cta-outline={plan.highlighted}
-						>
+						<a href={plan.href} class="vane-plan-cta">
 							{plan.cta}
 						</a>
 					{/if}
@@ -204,7 +206,7 @@
 	</section>
 
 	<!-- CTA Section -->
-	<section class="vane-section vane-section-yellow">
+	<section class="vane-section vane-section-cta">
 		<div class="vane-cta">
 			<h2 class="vane-cta-headline">Ready to start?</h2>
 			<p class="vane-mono vane-gray vane-cta-text">

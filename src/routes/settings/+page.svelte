@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { supabase } from '$lib/supabase';
-	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
+	import DashboardNav from '$lib/components/DashboardNav.svelte';
 
 	let { data }: { data: PageData } = $props();
 
@@ -31,11 +30,6 @@
 		}
 	}
 
-	async function handleSignOut() {
-		await supabase.auth.signOut();
-		goto('/');
-	}
-
 	function formatDate(dateString: string) {
 		return new Date(dateString).toLocaleDateString('en-US', {
 			year: 'numeric',
@@ -52,19 +46,7 @@
 </svelte:head>
 
 <div class="vane-home">
-	<!-- Navigation -->
-	<nav class="vane-nav">
-		<div class="vane-nav-left">
-			<a href="/" class="vane-nav-brand">
-				<span class="vane-mono">Vane</span>
-				<span class="vane-mono vane-gray">SEC Risk Intelligence</span>
-			</a>
-		</div>
-		<div class="vane-nav-right">
-			<a href="/risks" class="vane-mono vane-gray vane-nav-link">← Back to Dashboard</a>
-			<button onclick={handleSignOut} class="vane-btn">Sign Out</button>
-		</div>
-	</nav>
+	<DashboardNav />
 
 	<!-- Settings -->
 	<section class="vane-dashboard">
@@ -140,7 +122,7 @@
 					<div class="vane-settings-card">
 						<p class="vane-mono vane-gray">You're currently on the free plan.</p>
 						<div class="vane-settings-actions">
-							<a href="/pricing" class="vane-btn">Upgrade to Individual</a>
+							<a href="/pricing" class="vane-btn">Upgrade to Professional</a>
 						</div>
 					</div>
 				</section>
@@ -181,6 +163,7 @@
 	.vane-dashboard {
 		min-height: 100vh;
 		padding: 8rem 2rem 4rem;
+		background: #f6f9fc;
 	}
 
 	.vane-dashboard-container {
@@ -189,7 +172,7 @@
 	}
 
 	.vane-dashboard-header {
-		margin-bottom: 4rem;
+		margin-bottom: 2rem;
 		padding-bottom: 2rem;
 		border-bottom: 1px solid #e5e5e5;
 	}
@@ -202,7 +185,7 @@
 	}
 
 	.vane-settings-section {
-		margin-bottom: 4rem;
+		margin-bottom: 2rem;
 	}
 
 	.vane-section-heading {
@@ -217,6 +200,8 @@
 	.vane-settings-card {
 		border: 1px solid #e5e5e5;
 		padding: 2rem;
+		border-radius: 12px;
+		background: white;
 	}
 
 	.vane-settings-row {
@@ -300,6 +285,7 @@
 		border: 1px solid #c00;
 		cursor: pointer;
 		transition: all 0.15s ease;
+		border-radius: 6px;
 	}
 
 	.vane-btn-danger:hover {
@@ -312,6 +298,7 @@
 		border: 2px solid #c00;
 		background: white;
 		margin-top: 1rem;
+		border-radius: 8px;
 	}
 
 	.vane-delete-confirm-text {

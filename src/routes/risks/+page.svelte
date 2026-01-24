@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { supabase } from '$lib/supabase';
-	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
 	import SearchableSelect from '$lib/components/SearchableSelect.svelte';
+	import DashboardNav from '$lib/components/DashboardNav.svelte';
 
 	let { data, form }: { data: PageData; form: any } = $props();
 
@@ -19,18 +18,13 @@
 		}))
 	);
 
-	async function handleSignOut() {
-		await supabase.auth.signOut();
-		goto('/');
-	}
-
 	async function handleUpgrade() {
 		try {
 			const response = await fetch('/api/create-checkout-session', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
-					priceId: process.env.STRIPE_INDIVIDUAL_PRICE_ID || 'price_individual'
+					priceId: import.meta.env.PUBLIC_STRIPE_PROFESSIONAL_PRICE_ID || 'price_individual'
 				})
 			});
 
@@ -79,18 +73,7 @@
 </svelte:head>
 
 <div class="vane-home">
-	<nav class="vane-nav">
-		<div class="vane-nav-left">
-			<a href="/" class="vane-nav-brand">
-				<span class="vane-mono">Vane</span>
-				<span class="vane-mono vane-gray">SEC Risk Intelligence</span>
-			</a>
-		</div>
-		<div class="vane-nav-right">
-			<a href="/settings" class="vane-mono vane-nav-link">Settings</a>
-			<button onclick={handleSignOut} class="vane-btn-ghost">Sign Out</button>
-		</div>
-	</nav>
+	<DashboardNav />
 
 	<section class="vane-dashboard">
 		<div class="vane-dashboard-container">
@@ -116,14 +99,7 @@
 					{/if}
 				</div>
 
-				{#if form?.needsUpgrade}
-					<div class="vane-upgrade-banner">
-						<p class="vane-mono">Free plan is limited to 1 company watch</p>
-						<button class="vane-btn" onclick={handleUpgrade}>Upgrade to Individual Plan</button>
-					</div>
-				{/if}
-
-				{#if form?.error && !form?.needsUpgrade}
+				{#if form?.error}
 					<div class="vane-error-banner">
 						<p class="vane-mono">{form.error}</p>
 					</div>
@@ -144,6 +120,12 @@
 								<p class="vane-mono vane-gray vane-watch-cik">CIK: {watch.cik}</p>
 							</button>
 						{/each}
+						{#if data.profile?.plan === 'free' && data.watches.length > 0}
+							<button class="vane-watch-card vane-upgrade-card" onclick={handleUpgrade}>
+								<h3 class="vane-watch-name vane-upgrade-text">Upgrade to add more</h3>
+								<p class="vane-mono vane-gray vane-watch-cik">Professional plan →</p>
+							</button>
+						{/if}
 					</div>
 				{/if}
 			</section>
@@ -241,9 +223,6 @@
 					</div>
 
 					<div class="vane-flyout-header-actions">
-						<a href="/risks/{selectedWatch.id}" class="vane-btn-sm vane-btn-primary">
-							View Full Report ↗
-						</a>
 						<button
 							class="vane-flyout-close"
 							onclick={closeDetailsFlyout}
@@ -256,6 +235,11 @@
 				</div>
 
 				<div class="vane-flyout-content">
+					<div class="vane-flyout-section" style="margin-top: 0;">
+						<a href="/risks/{selectedWatch.id}" class="vane-btn vane-btn-primary vane-mono">
+							View risks
+						</a>
+					</div>
 					<div class="vane-flyout-section">
 						<h3 class="vane-mono vane-flyout-section-title">Company Details</h3>
 						<dl class="vane-details-list">
@@ -263,17 +247,23 @@
 							<dd>{selectedWatch.cik}</dd>
 							<dt class="vane-mono">Watching Since</dt>
 							<dd>{new Date(selectedWatch.created_at).toLocaleDateString()}</dd>
+							{#if selectedWatch.filings && selectedWatch.filings.length > 0}
+								<dt class="vane-mono">Last Filing</dt>
+								<dd>{new Date(selectedWatch.filings[0].filing_date).toLocaleDateString()}</dd>
+							{/if}
 						</dl>
 					</div>
 
 					<div class="vane-flyout-section">
-						<h3 class="vane-mono vane-flyout-section-title">Actions</h3>
-						<form method="POST" action="?/removeWatch" use:enhance>
-							<input type="hidden" name="watchId" value={selectedWatch.id} />
-							<button type="submit" class="vane-btn vane-btn-danger" style="width: 100%;">
-								Remove
-							</button>
-						</form>
+						<div class="vane-flyout-section-actions">
+							<form method="POST" action="?/removeWatch" use:enhance>
+								<input type="hidden" name="watchId" value={selectedWatch.id} />
+								<button type="submit" class="vane-btn-danger-flyout" style="width: 100%;">
+									Remove
+								</button>
+							</form>
+							<div></div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -297,7 +287,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-start;
-		margin-bottom: 3rem;
+		margin-bottom: 2rem;
 		padding: 2rem;
 		background: white;
 		border-radius: 12px;
@@ -326,8 +316,8 @@
 	}
 
 	.vane-plan-badge-enterprise {
-		border-color: #635bff;
-		background: #635bff;
+		border-color: #ff7f0e;
+		background: #ff7f0e;
 		color: white;
 	}
 
@@ -374,9 +364,25 @@
 	}
 
 	.vane-watch-card:hover {
-		border-color: #635bff;
-		box-shadow: 0 4px 12px rgba(99, 91, 255, 0.12);
+		border-color: #ff7f0e;
+		box-shadow: 0 4px 12px rgba(255, 127, 14, 0.14);
 		transform: translateY(-2px);
+	}
+
+	.vane-upgrade-card {
+		border-style: dashed;
+		border-color: #ffd966;
+		background: #fffbea;
+	}
+
+	.vane-upgrade-card:hover {
+		border-color: #ffd966;
+		background: #fff8d5;
+		box-shadow: 0 4px 12px rgba(255, 217, 102, 0.2);
+	}
+
+	.vane-upgrade-text {
+		color: #8b7000;
 	}
 
 	.vane-watch-name {
@@ -467,7 +473,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding: 2rem;
+		padding: 1.5rem;
 		border-bottom: 1px solid #e3e8ef;
 	}
 
@@ -508,11 +514,18 @@
 	}
 
 	.vane-flyout-content {
-		padding: 2rem;
+		padding: 1.5rem;
 	}
 
 	.vane-flyout-section {
 		margin-bottom: 2rem;
+	}
+
+	.vane-flyout-section-actions {
+		display: flex;
+		gap: 1rem;
+		justify-content: flex-end;
+		margin-top: 1rem;
 	}
 
 	.vane-flyout-section-title {
@@ -575,14 +588,28 @@
 
 	.vane-input:focus {
 		outline: none;
-		border-color: #635bff;
-		box-shadow: 0 0 0 3px rgba(99, 91, 255, 0.1);
+		border-color: #ff7f0e;
+		box-shadow: 0 0 0 3px rgba(255, 127, 14, 0.12);
 	}
 
 	.vane-modal-actions {
 		display: flex;
 		gap: 1rem;
 		justify-content: flex-end;
+	}
+
+	/* Base button: compact, mono, rounded (Stripe-like) */
+	.vane-btn {
+		display: inline-block;
+		text-decoration: none;
+		font-family: var(--vane-mono);
+		font-size: 13px;
+		line-height: 1.2;
+		letter-spacing: 0.02em;
+		padding: 0.5rem 0.85rem;
+		border-radius: 6px;
+		border: 1px solid transparent;
+		transition: all 0.15s ease;
 	}
 
 	.vane-btn-secondary {
@@ -599,18 +626,23 @@
 		border-color: #999;
 	}
 
-	.vane-btn-danger {
-		background: #ef4444;
-		color: white;
-		border: 1px solid #ef4444;
-		transition: all 0.15s ease;
-		padding: 0.5rem 1rem;
+	.vane-btn-danger-flyout {
+		font-family: var(--vane-mono);
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
 		font-size: 12px;
+		padding: 0.75rem 1rem;
+		background: white;
+		color: #ef4444;
+		border: 1px solid #ef4444;
+		cursor: pointer;
+		transition: all 0.15s ease;
+		border-radius: 6px;
 	}
 
-	.vane-btn-danger:hover {
-		background: #dc2626;
-		border-color: #dc2626;
+	.vane-btn-danger-flyout:hover {
+		background: #ef4444;
+		color: white;
 	}
 
 	.vane-btn-ghost {
@@ -624,6 +656,7 @@
 		cursor: pointer;
 		padding: 0.5rem 1rem;
 		transition: color 0.15s ease;
+		border-radius: 6px;
 	}
 
 	.vane-btn-ghost:hover {
@@ -649,14 +682,14 @@
 	}
 
 	.vane-btn-primary {
-		background: #635bff;
+		background: #ff7f0e;
 		color: white;
-		border: 1px solid #635bff;
+		border: 1px solid #ff7f0e;
 	}
 
 	.vane-btn-primary:hover {
-		background: #544dc9;
-		box-shadow: 0 2px 5px rgba(99, 91, 255, 0.3);
+		background: #e46f0d;
+		box-shadow: 0 2px 5px rgba(255, 127, 14, 0.3);
 	}
 
 	@media (max-width: 768px) {

@@ -1,26 +1,8 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { supabase } from '$lib/supabase';
 	import type { PageData } from './$types';
+	import DashboardNav from '$lib/components/DashboardNav.svelte';
 
 	let { data }: { data: PageData } = $props();
-
-	// Computed Initials for Avatar placeholder
-	const companyInitials = $derived(
-		data.company?.name
-			? data.company.name
-					.split(' ')
-					.map((n: string) => n[0])
-					.join('')
-					.slice(0, 2)
-					.toUpperCase()
-			: 'CO'
-	);
-
-	async function handleSignOut() {
-		await supabase.auth.signOut();
-		goto('/');
-	}
 
 	function getSeverityClass(severity: string | null) {
 		switch (severity?.toLowerCase()) {
@@ -40,43 +22,25 @@
 	<title>{data.company?.name || 'Company'} Risks - Vane</title>
 </svelte:head>
 
-<div class="vane-page">
-	<nav class="vane-nav">
-		<div class="vane-nav-left">
-			<a href="/" class="vane-nav-brand">
-				<span class="vane-mono">Vane</span>
-				<span class="vane-mono vane-gray">SEC Risk Intelligence</span>
-			</a>
-			<span class="vane-nav-divider">/</span>
-			<a href="/risks" class="vane-mono vane-nav-link">Risks</a>
-			<span class="vane-nav-divider">/</span>
-			<span class="vane-mono vane-active">{data.company?.ticker || '...'}</span>
-		</div>
-		<div class="vane-nav-right">
-			<a href="/settings" class="vane-mono vane-nav-link">Settings</a>
-			<button onclick={handleSignOut} class="vane-btn-ghost">Sign Out</button>
-		</div>
-	</nav>
+<div class="vane-home vane-page">
+	<DashboardNav />
 
 	<main class="vane-container">
 		<div class="vane-back-nav">
 			<a href="/risks" class="vane-back-link">
-				<span class="vane-arrow">←</span> Back to Dashboard
+				<span class="vane-arrow">←</span> Back
 			</a>
 		</div>
 
 		<header class="vane-header">
 			<div class="vane-company-lockup">
-				<div class="vane-company-avatar">
-					<span class="vane-mono">{companyInitials}</span>
-				</div>
 				<div>
 					<h1 class="vane-title">
 						{data.company?.name}
-						{#if data.company?.ticker}
-							<span class="vane-ticker">{data.company.ticker}</span>
-						{/if}
 					</h1>
+					{#if data.company?.ticker}
+						<span class="vane-ticker">{data.company.ticker}</span>
+					{/if}
 					<p class="vane-mono vane-gray">CIK: {data.company?.cik}</p>
 				</div>
 			</div>
@@ -88,7 +52,7 @@
 					rel="noreferrer"
 					class="vane-btn-secondary"
 				>
-					View on EDGAR ↗
+					EDGAR ↗
 				</a>
 			</div>
 		</header>
@@ -114,7 +78,9 @@
 							</span>
 						</div>
 						{#if filing.sec_url}
-							<a href={filing.sec_url} target="_blank" class="vane-link-sm">Source</a>
+							<div>
+								<a href={filing.sec_url} target="_blank" class="vane-link-sm">Source</a>
+							</div>
 						{/if}
 					</div>
 
@@ -194,52 +160,6 @@
 		top: -1px;
 	}
 
-	/* Nav (Reused/Adapted) */
-	.vane-nav {
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		height: 64px;
-		background: rgba(255, 255, 255, 0.9);
-		backdrop-filter: blur(8px);
-		border-bottom: 1px solid #e3e8ef;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 0 2rem;
-		z-index: 100;
-	}
-
-	.vane-nav-left,
-	.vane-nav-right {
-		display: flex;
-		align-items: center;
-		gap: 1.5rem;
-	}
-
-	.vane-nav-brand {
-		text-decoration: none;
-		color: black;
-		display: flex;
-		gap: 0.5rem;
-	}
-
-	.vane-nav-divider {
-		color: #e3e8ef;
-	}
-
-	.vane-nav-link {
-		text-decoration: none;
-		color: var(--vane-gray);
-		font-size: 14px;
-		transition: color 0.2s;
-	}
-
-	.vane-nav-link:hover {
-		color: black;
-	}
-
 	.vane-active {
 		color: black;
 		font-size: 14px;
@@ -285,7 +205,6 @@
 	.vane-ticker {
 		color: var(--vane-gray);
 		font-weight: 300;
-		margin-left: 0.5rem;
 	}
 
 	/* Filing Sections */
@@ -299,7 +218,7 @@
 		gap: 1rem;
 		margin-bottom: 1.5rem;
 		padding-left: 0.5rem;
-		border-left: 2px solid #635bff;
+		border-left: 2px solid #ff7f0e;
 	}
 
 	.vane-filing-type {
@@ -317,7 +236,7 @@
 		font-family: var(--vane-mono);
 		font-size: 0.75rem;
 		text-transform: uppercase;
-		color: #635bff;
+		color: #ff7f0e;
 		text-decoration: none;
 		letter-spacing: 0.05em;
 	}

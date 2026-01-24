@@ -67,7 +67,7 @@
 	async function initiateCheckout() {
 		try {
 			const priceId =
-				selectedPlan === 'individual' ? import.meta.env.PUBLIC_STRIPE_INDIVIDUAL_PRICE_ID : null;
+				selectedPlan === 'individual' ? import.meta.env.PUBLIC_STRIPE_PROFESSIONAL_PRICE_ID : null;
 
 			if (!priceId) {
 				// For enterprise, go to contact page
@@ -113,7 +113,7 @@
 			</a>
 		</div>
 		<div class="vane-nav-right">
-			<a href="/" class="vane-mono vane-gray vane-nav-link">← Back to Home</a>
+			<a href="/" class="vane-mono vane-gray vane-nav-link">← Home</a>
 		</div>
 	</nav>
 
@@ -134,6 +134,19 @@
 							<span class="vane-mono">{error}</span>
 						</div>
 					{/if}
+
+					<button
+						type="button"
+						class="vane-social-button"
+						onclick={() => handleSocialLogin('google')}
+						disabled={loading}
+					>
+						<span>Continue with Google</span>
+					</button>
+
+					<div class="vane-auth-divider">
+						<span class="vane-mono vane-gray">or</span>
+					</div>
 
 					<div class="vane-form-group">
 						<label for="name" class="vane-form-label vane-mono">Name</label>
@@ -180,19 +193,6 @@
 
 					<button type="submit" class="vane-auth-button" disabled={loading}>
 						{loading ? 'Creating account...' : 'Continue to payment'}
-					</button>
-
-					<div class="vane-auth-divider">
-						<span class="vane-mono vane-gray">or</span>
-					</div>
-
-					<button
-						type="button"
-						class="vane-social-button"
-						onclick={() => handleSocialLogin('google')}
-						disabled={loading}
-					>
-						<span>Continue with Google</span>
 					</button>
 
 					<div class="vane-auth-footer">
@@ -242,6 +242,7 @@
 		cursor: pointer;
 		transition: all 0.15s ease;
 		width: 100%;
+		border-radius: 6px;
 	}
 
 	.vane-social-button:hover:not(:disabled) {

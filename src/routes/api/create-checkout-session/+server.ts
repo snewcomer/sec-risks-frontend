@@ -2,18 +2,18 @@ import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { createCheckoutSession, stripe } from '$lib/server/stripe';
 import { PUBLIC_APP_URL } from '$env/static/public';
-import { STRIPE_INDIVIDUAL_PRICE_ID } from '$env/static/private';
+import { STRIPE_PROFESSIONAL_PRICE_ID } from '$env/static/private';
 
 export const POST: RequestHandler = async ({ request, locals: { safeGetSession, supabase } }) => {
 	try {
 		const { plan } = await request.json();
 
 		// Use the environment variable for the actual Stripe price ID
-		const actualPriceId = STRIPE_INDIVIDUAL_PRICE_ID;
+		const actualPriceId = STRIPE_PROFESSIONAL_PRICE_ID;
 
 		if (!actualPriceId) {
 			console.error(
-				'Stripe price ID not configured. Please set STRIPE_INDIVIDUAL_PRICE_ID in .env'
+				'Stripe price ID not configured. Please set STRIPE_PROFESSIONAL_PRICE_ID in .env'
 			);
 			throw error(500, 'Stripe not configured. Please contact support.');
 		}

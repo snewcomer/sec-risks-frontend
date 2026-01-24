@@ -73,7 +73,7 @@
 </script>
 
 <svelte:head>
-	<title>Risks Dashboard - Vane</title>
+	<title>Dashboard - Vane</title>
 	<meta name="description" content="Monitor your SEC risk intelligence alerts and watchlists." />
 	<meta name="robots" content="noindex, nofollow" />
 </svelte:head>
@@ -168,7 +168,14 @@
 			role="button"
 			tabindex="0"
 		>
-			<div class="vane-flyout" onclick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+			<div
+				class="vane-flyout"
+				onclick={(e) => e.stopPropagation()}
+				onkeydown={(e) => e.key === 'Escape' && closeAddFlyout()}
+				role="dialog"
+				aria-modal="true"
+				tabindex="0"
+			>
 				<div class="vane-flyout-header">
 					<h2 class="vane-flyout-title">Add Company Watch</h2>
 					<button
@@ -213,19 +220,39 @@
 			role="button"
 			tabindex="0"
 		>
-			<div class="vane-flyout" onclick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+			<div
+				class="vane-flyout"
+				onclick={(e) => e.stopPropagation()}
+				onkeydown={(e) => e.key === 'Escape' && closeDetailsFlyout()}
+				role="dialog"
+				aria-modal="true"
+				tabindex="0"
+			>
 				<div class="vane-flyout-header">
-					<h2 class="vane-flyout-title">
-						{selectedWatch.companies?.name || 'Unknown Company'}
-					</h2>
-					<button
-						class="vane-flyout-close"
-						onclick={closeDetailsFlyout}
-						aria-label="Close"
-						type="button"
-					>
-						×
-					</button>
+					<div>
+						<h2 class="vane-flyout-title">
+							{selectedWatch.companies?.name || 'Unknown Company'}
+						</h2>
+						{#if selectedWatch.companies?.ticker}
+							<p class="vane-mono vane-gray" style="margin: 0; font-size: 12px;">
+								{selectedWatch.companies.ticker}
+							</p>
+						{/if}
+					</div>
+
+					<div class="vane-flyout-header-actions">
+						<a href="/risks/{selectedWatch.id}" class="vane-btn-sm vane-btn-primary">
+							View Full Report ↗
+						</a>
+						<button
+							class="vane-flyout-close"
+							onclick={closeDetailsFlyout}
+							aria-label="Close"
+							type="button"
+						>
+							×
+						</button>
+					</div>
 				</div>
 
 				<div class="vane-flyout-content">
@@ -244,7 +271,7 @@
 						<form method="POST" action="?/removeWatch" use:enhance>
 							<input type="hidden" name="watchId" value={selectedWatch.id} />
 							<button type="submit" class="vane-btn vane-btn-danger" style="width: 100%;">
-								Stop Watching Company
+								Remove
 							</button>
 						</form>
 					</div>
@@ -400,7 +427,6 @@
 		align-items: center;
 		justify-content: center;
 		z-index: 1000;
-		/* Reset button styles since we added role=button/keyboard access but it's a div */
 		cursor: pointer;
 	}
 
@@ -425,7 +451,7 @@
 		overflow-y: auto;
 		box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
 		animation: slideIn 0.3s cubic-bezier(0.32, 0.72, 0, 1);
-		cursor: default; /* Reset cursor inside the flyout */
+		cursor: default;
 	}
 
 	@keyframes slideIn {
@@ -440,9 +466,15 @@
 	.vane-flyout-header {
 		display: flex;
 		justify-content: space-between;
-		align-items: flex-start;
+		align-items: center;
 		padding: 2rem;
 		border-bottom: 1px solid #e3e8ef;
+	}
+
+	.vane-flyout-header-actions {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
 	}
 
 	.vane-flyout-title {
@@ -466,6 +498,7 @@
 		justify-content: center;
 		color: var(--vane-gray);
 		transition: all 0.15s ease;
+		border-radius: 50%;
 	}
 
 	.vane-flyout-close:hover {
@@ -602,6 +635,28 @@
 		gap: 1rem;
 		justify-content: flex-end;
 		margin-top: 2rem;
+	}
+
+	.vane-btn-sm {
+		padding: 0.4rem 0.8rem;
+		font-size: 13px;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		font-family: var(--vane-mono);
+		text-decoration: none;
+		border-radius: 6px;
+		transition: all 0.2s;
+	}
+
+	.vane-btn-primary {
+		background: #635bff;
+		color: white;
+		border: 1px solid #635bff;
+	}
+
+	.vane-btn-primary:hover {
+		background: #544dc9;
+		box-shadow: 0 2px 5px rgba(99, 91, 255, 0.3);
 	}
 
 	@media (max-width: 768px) {

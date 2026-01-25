@@ -54,7 +54,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
 	const userId = session.metadata?.supabase_user_id;
-	const plan = session.metadata?.plan || 'individual';
+	const plan = session.metadata?.plan || 'professional';
 
 	if (!userId) {
 		console.error('No supabase_user_id in session metadata');
@@ -97,7 +97,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
 	let plan = 'free';
 	if (subscription.status === 'active' || subscription.status === 'trialing') {
 		// You could check subscription.items.data[0].price.id to determine plan
-		plan = 'individual';
+		plan = 'professional';
 	}
 
 	// Update profile

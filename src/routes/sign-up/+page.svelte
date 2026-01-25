@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { PUBLIC_APP_URL } from '$env/static/public';
+	import ErrorBanner from '$lib/components/ErrorBanner.svelte';
 
 	let email = $state('');
 	let password = $state('');
@@ -12,7 +13,7 @@
 	let mode = $state<'signup' | 'social'>('signup');
 
 	// Get plan from URL params
-	const selectedPlan = $derived($page.url.searchParams.get('plan') || 'individual');
+	const selectedPlan = $derived($page.url.searchParams.get('plan') || 'professional');
 
 	async function handleSignUp(e: Event) {
 		e.preventDefault();
@@ -39,7 +40,7 @@
 				await initiateCheckout();
 			}
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Something went wrong';
+			error = err instanceof Error ? err.message : 'Failed to create account. Please try again.';
 		} finally {
 			loading = false;
 		}
@@ -59,7 +60,8 @@
 
 			if (signInError) throw signInError;
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Something went wrong';
+			error =
+				err instanceof Error ? err.message : 'Failed to sign in with Google. Please try again.';
 			loading = false;
 		}
 	}
@@ -67,7 +69,9 @@
 	async function initiateCheckout() {
 		try {
 			const priceId =
-				selectedPlan === 'individual' ? import.meta.env.PUBLIC_STRIPE_PROFESSIONAL_PRICE_ID : null;
+				selectedPlan === 'professional'
+					? import.meta.env.PUBLIC_STRIPE_PROFESSIONAL_PRICE_ID
+					: null;
 
 			if (!priceId) {
 				// For enterprise, go to contact page
@@ -87,9 +91,13 @@
 			}
 
 			const { url } = await response.json();
-			window.location.href = url;
+			if (url) {
+				window.location.href = url;
+			} else {
+				throw new Error('No checkout URL received');
+			}
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Failed to start checkout';
+			error = err instanceof Error ? err.message : 'Failed to start checkout. Please try again.';
 		}
 	}
 </script>
@@ -130,9 +138,7 @@
 			{#if mode === 'signup'}
 				<form class="vane-auth-form" onsubmit={handleSignUp}>
 					{#if error}
-						<div class="vane-auth-error">
-							<span class="vane-mono">{error}</span>
-						</div>
+						<ErrorBanner message={error} onClose={() => (error = '')} />
 					{/if}
 
 					<button

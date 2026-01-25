@@ -1,7 +1,9 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import ErrorBanner from '$lib/components/ErrorBanner.svelte';
 
 	let { data }: { data: PageData } = $props();
+	let upgradeError = $state('');
 
 	interface Plan {
 		name: string;
@@ -25,8 +27,8 @@
 				'Industry benchmarking'
 			],
 			cta: 'Get Started',
-			href: '/sign-up?plan=individual',
-			priceId: 'price_individual'
+			href: '/sign-up?plan=professional',
+			priceId: 'price_professional'
 		},
 		{
 			name: 'Enterprise',
@@ -44,21 +46,31 @@
 	];
 
 	async function handleUpgrade() {
+		upgradeError = '';
 		try {
 			const response = await fetch('/api/create-checkout-session', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
-					plan: 'individual'
+					plan: 'professional'
 				})
 			});
+
+			if (!response.ok) {
+				throw new Error('Failed to create checkout session');
+			}
 
 			const { url } = await response.json();
 			if (url) {
 				window.location.href = url;
+			} else {
+				throw new Error('No checkout URL received');
 			}
 		} catch (error) {
-			console.error('Error creating checkout session:', error);
+			upgradeError =
+				error instanceof Error
+					? error.message
+					: 'Failed to start upgrade process. Please try again.';
 		}
 	}
 
@@ -137,6 +149,12 @@
 
 	<!-- Plans Grid -->
 	<section class="vane-plans-section">
+		{#if upgradeError}
+			<div style="max-width: 900px; margin: 0 auto 2rem;">
+				<ErrorBanner message={upgradeError} onClose={() => (upgradeError = '')} />
+			</div>
+		{/if}
+
 		<div class="vane-plans-grid">
 			{#each plans as plan}
 				<article class="vane-plan-card">
@@ -216,7 +234,7 @@
 				{#if data.session}
 					<button onclick={handleUpgrade} class="vane-btn-primary"> Get Started </button>
 				{:else}
-					<a href="/sign-up?plan=individual" class="vane-btn-primary">Get Started</a>
+					<a href="/sign-up?plan=professional" class="vane-btn-primary">Get Started</a>
 				{/if}
 				<a href="/comparison" class="vane-btn-secondary">See How It Works</a>
 			</div>

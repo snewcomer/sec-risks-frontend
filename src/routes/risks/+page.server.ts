@@ -75,7 +75,8 @@ export const actions: Actions = {
 
 		if (plan === 'free' && count >= 1) {
 			return fail(403, {
-				error: 'Free plan is limited to 1 company watch. Upgrade to keep an eye on more companies.',
+				error:
+					'Free plan is limited to 1 company watch. Upgrade to Professional to keep an eye on more companies.',
 				needsUpgrade: true
 			});
 		}

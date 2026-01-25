@@ -31,7 +31,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			case 'checkout.session.completed': {
 				const session = event.data.object;
 				const userId = session.metadata?.supabase_user_id;
-				const plan = session.metadata?.plan || 'individual';
+				const plan = session.metadata?.plan || 'professional';
 
 				if (!userId) {
 					console.error('No user ID in checkout session metadata');
@@ -77,7 +77,7 @@ export const POST: RequestHandler = async ({ request }) => {
 				let newPlan = profile.plan;
 				if (subscription.status === 'active') {
 					// Subscription is active, ensure they have the paid plan
-					newPlan = 'individual';
+					newPlan = 'professional';
 				} else if (subscription.status === 'canceled' || subscription.status === 'unpaid') {
 					// Subscription canceled or payment failed, downgrade to free
 					newPlan = 'free';

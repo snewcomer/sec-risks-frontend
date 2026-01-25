@@ -61,7 +61,7 @@ export const POST: RequestHandler = async ({ request, locals: { safeGetSession, 
 			cancelUrl: `${PUBLIC_APP_URL}/pricing?canceled=true`,
 			metadata: {
 				supabase_user_id: user.id,
-				plan: plan || 'individual'
+				plan: plan || 'professional'
 			}
 		});
 

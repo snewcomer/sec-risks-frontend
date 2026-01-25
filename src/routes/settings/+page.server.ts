@@ -1,4 +1,5 @@
 import type { PageServerLoad, Actions } from './$types';
+import { supabaseAdmin } from '$lib/server/supabase';
 import { stripe } from '$lib/server/stripe';
 import { error, redirect } from '@sveltejs/kit';
 
@@ -40,24 +41,39 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase 
 export const actions: Actions = {
 	deleteAccount: async ({ locals: { safeGetSession, supabase } }) => {
 		const { user } = await safeGetSession();
-
-		if (!user) {
-			throw error(401, 'Not authenticated');
-		}
+		if (!user) throw error(401, 'Not authenticated');
 
 		try {
-			// Delete user's profile and auth account
-			const { error: deleteError } = await supabase.auth.admin.deleteUser(user.id);
+			// 1. Get the Stripe Customer ID before we delete the profile
+			const { data: profile } = await supabase
+				.from('profiles')
+				.select('stripe_customer_id')
+				.eq('id', user.id)
+				.single();
 
-			if (deleteError) {
-				throw deleteError;
+			// 2. Cleanup Stripe (Optional: stripe.customers.del(id) for full removal)
+			if (profile?.stripe_customer_id) {
+				const subscriptions = await stripe.subscriptions.list({
+					customer: profile.stripe_customer_id
+				});
+
+				// Cancel all active subscriptions immediately
+				for (const sub of subscriptions.data) {
+					await stripe.subscriptions.cancel(sub.id);
+				}
 			}
 
-			// Redirect to homepage
-			throw redirect(303, '/');
+			// 3. Delete from Supabase Auth (using Service Role Key)
+			// This will trigger "ON DELETE CASCADE" for your profiles table
+			const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(user.id);
+
+			if (deleteError) throw deleteError;
 		} catch (err) {
 			console.error('Delete account error:', err);
-			throw error(500, 'Failed to delete account');
+			throw error(500, 'Failed to complete account deletion');
 		}
+
+		// Redirect outside the try/catch to avoid catching the redirect 'error'
+		throw redirect(303, '/');
 	}
 };

@@ -8,7 +8,7 @@ export type Profile = {
 	email: string;
 	name: string | null;
 	stripe_customer_id: string | null;
-	plan: 'free' | 'individual' | 'enterprise';
+	plan: 'free' | 'professional' | 'enterprise';
 	created_at: string;
 	updated_at: string;
 };

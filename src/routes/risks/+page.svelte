@@ -3,6 +3,7 @@
 	import type { PageData } from './$types';
 	import SearchableSelect from '$lib/components/SearchableSelect.svelte';
 	import DashboardNav from '$lib/components/DashboardNav.svelte';
+	import ErrorBanner from '$lib/components/ErrorBanner.svelte';
 
 	let { data, form }: { data: PageData; form: any } = $props();
 
@@ -10,6 +11,7 @@
 	let showDetailsFlyout = $state(false);
 	let selectedWatch = $state<any>(null);
 	let selectedCompany = $state('');
+	let upgradeError = $state('');
 
 	const companyOptions = $derived(
 		data.companies.map((company) => ({
@@ -19,21 +21,31 @@
 	);
 
 	async function handleUpgrade() {
+		upgradeError = '';
 		try {
 			const response = await fetch('/api/create-checkout-session', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
-					priceId: import.meta.env.PUBLIC_STRIPE_PROFESSIONAL_PRICE_ID || 'price_individual'
+					priceId: import.meta.env.PUBLIC_STRIPE_PROFESSIONAL_PRICE_ID || 'price_professional'
 				})
 			});
+
+			if (!response.ok) {
+				throw new Error('Failed to create checkout session');
+			}
 
 			const { url } = await response.json();
 			if (url) {
 				window.location.href = url;
+			} else {
+				throw new Error('No checkout URL received');
 			}
 		} catch (error) {
-			console.error('Error creating checkout session:', error);
+			upgradeError =
+				error instanceof Error
+					? error.message
+					: 'Failed to start upgrade process. Please try again.';
 		}
 	}
 
@@ -100,9 +112,11 @@
 				</div>
 
 				{#if form?.error}
-					<div class="vane-error-banner">
-						<p class="vane-mono">{form.error}</p>
-					</div>
+					<ErrorBanner message={form.error} />
+				{/if}
+
+				{#if upgradeError}
+					<ErrorBanner message={upgradeError} onClose={() => (upgradeError = '')} />
 				{/if}
 
 				{#if data.watches.length === 0}
@@ -309,7 +323,7 @@
 		background: #f6f9fc;
 	}
 
-	.vane-plan-badge-individual {
+	.vane-plan-badge-professional {
 		border-color: #ffd966;
 		background: #fffbea;
 		color: #8b7000;
@@ -397,38 +411,11 @@
 		margin: 0;
 	}
 
-	.vane-upgrade-banner,
-	.vane-error-banner {
-		padding: 1.5rem;
-		margin-bottom: 2rem;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		gap: 1rem;
-		border-radius: 10px;
-	}
-
-	.vane-upgrade-banner {
-		border: 1px solid #ffd966;
-		background: #fffbea;
-	}
-
-	.vane-error-banner {
-		border: 1px solid #f5b4b4;
-		background: #fef2f2;
-	}
-
-	.vane-upgrade-banner p,
-	.vane-error-banner p {
-		margin: 0;
-	}
-
 	.vane-modal-overlay,
 	.vane-flyout-overlay {
 		position: fixed;
 		inset: 0;
 		background: rgba(0, 0, 0, 0.4);
-		backdrop-filter: blur(2px);
 		display: flex;
 		align-items: center;
 		justify-content: center;

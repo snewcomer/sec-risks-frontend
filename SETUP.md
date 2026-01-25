@@ -133,7 +133,7 @@ Go to Settings > API and copy:
 2. Create "Professional plan":
    - Name: Individual
    - Price: $20 every 6 months
-   - Copy Price ID → `STRIPE_INDIVIDUAL_PRICE_ID`
+   - Copy Price ID → `STRIPE_PROFESSIONAL_PRICE_ID`
 
 ### 2. Get API Keys
 

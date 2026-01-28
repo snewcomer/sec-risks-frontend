@@ -58,10 +58,6 @@
 	<!-- Settings -->
 	<section class="vane-dashboard">
 		<div class="vane-dashboard-container">
-			<header class="vane-dashboard-header">
-				<h1 class="vane-dashboard-headline">Account settings</h1>
-			</header>
-
 			{#if portalError}
 				<ErrorBanner message={portalError} onClose={() => (portalError = '')} />
 			{/if}
@@ -250,7 +246,6 @@
 
 	.vane-settings-actions {
 		margin-top: 1.5rem;
-		border-top: 1px solid #f5f5f5;
 		display: flex;
 		gap: 1rem;
 	}
@@ -258,6 +253,8 @@
 	.vane-settings-note {
 		font-size: 12px;
 		margin: 0;
+		display: flex;
+		align-items: center;
 	}
 
 	.vane-settings-danger {

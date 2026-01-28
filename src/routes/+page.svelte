@@ -162,10 +162,10 @@
 			</div>
 			<div class="vane-col-right">
 				<p class="vane-section-text">
-					Risk Factors sections grow longer every year. The language shifts subtly— hypothetical
-					becomes factual, generic becomes specific, contingent becomes realized. These semantic
-					shifts signal material changes, but they're invisible to keyword searches and impossible
-					to track manually across hundreds of filings.
+					How do you keep up with a dynamic landscape of risks in your industry? The language shifts
+					subtly and hypothetical becomes factual, generic becomes specific, contingent becomes
+					realized. These shifts signal material changes, but they're invisible to keyword searches
+					and impossible to track manually across hundreds of filings.
 				</p>
 				<div class="vane-features">
 					<div class="vane-feature">

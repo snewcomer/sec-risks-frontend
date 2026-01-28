@@ -121,7 +121,7 @@
 			</a>
 		</div>
 		<div class="vane-nav-right">
-			<a href="/" class="vane-mono vane-gray vane-nav-link">← Home</a>
+			<a href="/" class="vane-mono vane-gray vane-nav-link">Home</a>
 		</div>
 	</nav>
 

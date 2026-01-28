@@ -407,9 +407,18 @@ body {
 	padding: 1rem 1.5rem;
 	border: 1px solid var(--vane-black);
 	border-right: none;
+	border-radius: 6px 0 0 6px;
 	background: white;
 	flex: 1;
 	outline: none;
+	transition:
+		border-color 0.15s ease,
+		box-shadow 0.15s ease;
+}
+
+.vane-input:focus {
+	border-color: #ff7f0e;
+	box-shadow: 0 0 0 3px rgba(255, 127, 14, 0.1);
 }
 
 .vane-input::placeholder {
@@ -422,17 +431,33 @@ body {
 	text-transform: uppercase;
 	letter-spacing: 0.05em;
 	padding: 1rem 2rem;
-	border: 1px solid var(--vane-gray);
-	background: var(--vane-gray);
+	border: 1px solid var(--vane-black);
+	background: var(--vane-black);
 	color: white;
 	cursor: pointer;
 	transition: all 0.15s ease;
-	border-radius: 6px;
+	border-radius: 0 6px 6px 0;
 }
 
 .vane-submit:hover {
 	background: var(--vane-black);
 	border-color: var(--vane-black);
+}
+
+.vane-submit:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.vane-access-success {
+	color: var(--vane-black);
+	padding: 1rem 0;
+}
+
+.vane-access-error {
+	color: #dc2626;
+	margin-top: 1rem;
+	font-size: 12px;
 }
 
 /* Footer */

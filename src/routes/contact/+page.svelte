@@ -35,6 +35,9 @@
 			});
 
 			if (!response.ok) {
+				if (response.status === 429) {
+					throw new Error('Too many requests. Please wait a few minutes and try again.');
+				}
 				const data = await response.json().catch(() => ({}));
 				throw new Error(data.message || 'Failed to send message. Please try again.');
 			}

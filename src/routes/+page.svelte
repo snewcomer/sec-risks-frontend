@@ -5,10 +5,46 @@
 	let { data }: { data: PageData } = $props();
 
 	let heroVisible = $state(false);
+	let accessEmail = $state('');
+	let accessLoading = $state(false);
+	let accessSuccess = $state(false);
+	let accessError = $state('');
 
 	onMount(() => {
 		heroVisible = true;
 	});
+
+	async function handleAccessSubmit(e: Event) {
+		e.preventDefault();
+		accessLoading = true;
+		accessError = '';
+
+		try {
+			const response = await fetch('/api/contact', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					name: 'Early Access Request',
+					email: accessEmail,
+					message: 'Requesting early access to Vane risk alerts.'
+				})
+			});
+
+			if (!response.ok) {
+				if (response.status === 429) {
+					throw new Error('Too many requests. Please wait a few minutes.');
+				}
+				throw new Error('Failed to submit. Please try again.');
+			}
+
+			accessSuccess = true;
+			accessEmail = '';
+		} catch (err) {
+			accessError = err instanceof Error ? err.message : 'Failed to submit. Please try again.';
+		} finally {
+			accessLoading = false;
+		}
+	}
 </script>
 
 <svelte:head>
@@ -189,17 +225,28 @@
 				Get early access to risk escalation alerts. Be the first to know when filings signal
 				material change.
 			</p>
-			<form class="vane-form" action="/contact" method="post">
-				<input
-					type="email"
-					name="email"
-					class="vane-input"
-					placeholder="Your email"
-					required
-					aria-label="Email address"
-				/>
-				<button type="submit" class="vane-submit">Get access</button>
-			</form>
+			{#if accessSuccess}
+				<p class="vane-mono vane-access-success">Thanks! We'll be in touch soon.</p>
+			{:else}
+				<form class="vane-form" onsubmit={handleAccessSubmit}>
+					<input
+						type="email"
+						name="email"
+						bind:value={accessEmail}
+						class="vane-input"
+						placeholder="Your email"
+						required
+						aria-label="Email address"
+						disabled={accessLoading}
+					/>
+					<button type="submit" class="vane-submit" disabled={accessLoading}>
+						{accessLoading ? 'Sending...' : 'Get access'}
+					</button>
+				</form>
+				{#if accessError}
+					<p class="vane-mono vane-access-error">{accessError}</p>
+				{/if}
+			{/if}
 		</div>
 	</section>
 

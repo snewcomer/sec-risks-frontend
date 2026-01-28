@@ -16,7 +16,10 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase 
 			.select('*, companies(cik, name, ticker)')
 			.eq('user_id', user.id)
 			.order('created_at', { ascending: false }),
-		supabase.from('companies').select('cik, name, ticker').order('name', { ascending: true })
+		supabase
+			.from('companies')
+			.select('cik, name, ticker, filings!inner(cik)')
+			.order('name', { ascending: true })
 	]);
 
 	// Fetch filings separately for each watch
@@ -24,7 +27,7 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase 
 		const watchesWithFilings = await Promise.all(
 			watchesResult.data.map(async (watch) => {
 				const { data: filings } = await supabase
-					.from('sec_filings')
+					.from('filings')
 					.select('filing_date')
 					.eq('cik', watch.cik)
 					.order('filing_date', { ascending: false })
@@ -91,7 +94,7 @@ export const actions: Actions = {
 				return fail(400, { error: 'You are already watching this company' });
 			}
 			console.error('Action Error (addWatch):', error);
-			return fail(500, { error: 'Failed to add company watch' });
+			return fail(500, { error: 'Failed to Track Company' });
 		}
 
 		return { success: true };

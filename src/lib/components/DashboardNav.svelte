@@ -17,6 +17,7 @@
 	<div class="vane-nav-right">
 		<a href="/risks" class="vane-mono vane-nav-link">Dashboard</a>
 		<a href="/settings" class="vane-mono vane-nav-link">Settings</a>
+		<a href="/contact" class="vane-mono vane-nav-link">Contact</a>
 		<button onclick={handleSignOut} class="vane-mono vane-nav-link">Sign Out</button>
 	</div>
 </nav>

@@ -12,6 +12,9 @@
 	let selectedWatch = $state<any>(null);
 	let selectedCompany = $state('');
 	let upgradeError = $state('');
+	let addingWatch = $state(false);
+	let addWatchSuccess = $state(false);
+	let removingWatch = $state(false);
 
 	const companyOptions = $derived(
 		data.companies.map((company) => ({
@@ -51,12 +54,40 @@
 
 	function openAddFlyout() {
 		selectedCompany = '';
+		addWatchSuccess = false;
 		showAddFlyout = true;
 	}
 
 	function closeAddFlyout() {
 		showAddFlyout = false;
 		selectedCompany = '';
+		addWatchSuccess = false;
+	}
+
+	function handleAddWatchSubmit() {
+		return async ({ result, update }: { result: any; update: () => Promise<void> }) => {
+			addingWatch = false;
+			if (result.type === 'success') {
+				addWatchSuccess = true;
+				selectedCompany = '';
+				await update();
+				setTimeout(() => {
+					closeAddFlyout();
+				}, 1500);
+			} else {
+				await update();
+			}
+		};
+	}
+
+	function handleRemoveWatchSubmit() {
+		return async ({ result, update }: { result: any; update: () => Promise<void> }) => {
+			removingWatch = false;
+			if (result.type === 'success') {
+				closeDetailsFlyout();
+			}
+			await update();
+		};
 	}
 
 	function openDetailsFlyout(watch: any) {
@@ -91,7 +122,7 @@
 		<div class="vane-dashboard-container">
 			<header class="vane-dashboard-header">
 				<div>
-					<h1 class="vane-dashboard-headline">SEC Risks</h1>
+					<h1 class="vane-dashboard-headline">SEC Risk Monitor</h1>
 					<p class="vane-mono vane-gray">
 						Welcome back, {data.profile?.name || data.profile?.email}
 					</p>
@@ -103,11 +134,11 @@
 
 			<section class="vane-dashboard-section">
 				<div
-					style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;"
+					style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;"
 				>
 					<h2 class="vane-section-heading" style="margin: 0;">Company Watches</h2>
 					{#if data.watches.length > 0}
-						<button class="vane-btn" onclick={openAddFlyout}> Add Company Watch </button>
+						<button class="vane-btn" onclick={openAddFlyout}> Track Company </button>
 					{/if}
 				</div>
 
@@ -122,9 +153,9 @@
 				{#if data.watches.length === 0}
 					<div class="vane-empty-state">
 						<p class="vane-mono vane-gray">
-							No companies watched yet. Add your first company to start monitoring SEC filings.
+							No companies tracked yet. Add your first company to start monitoring SEC filings.
 						</p>
-						<button class="vane-btn" onclick={openAddFlyout}> Add Company Watch </button>
+						<button class="vane-btn" onclick={openAddFlyout}> Track Company </button>
 					</div>
 				{:else}
 					<div class="vane-watches-grid">
@@ -173,7 +204,7 @@
 				tabindex="0"
 			>
 				<div class="vane-flyout-header">
-					<h2 class="vane-flyout-title">Add Company Watch</h2>
+					<h2 class="vane-flyout-title">Track Company</h2>
 					<button
 						class="vane-flyout-close"
 						onclick={closeAddFlyout}
@@ -185,24 +216,65 @@
 				</div>
 
 				<div class="vane-flyout-content">
-					<form method="POST" action="?/addWatch" use:enhance>
-						<div class="vane-form-group">
-							<label for="company" class="vane-mono">Select Company</label>
-							<SearchableSelect
-								options={companyOptions}
-								bind:value={selectedCompany}
-								name="cik"
-								placeholder="Search for a company..."
-								required
-							/>
+					{#if addWatchSuccess}
+						<div class="vane-flyout-success">
+							<svg
+								class="vane-success-icon"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+								<polyline points="22 4 12 14.01 9 11.01" />
+							</svg>
+							<p class="vane-mono">Company added</p>
 						</div>
-						<div class="vane-flyout-actions">
-							<button type="button" class="vane-btn vane-btn-secondary" onclick={closeAddFlyout}>
-								Cancel
-							</button>
-							<button type="submit" class="vane-btn">Add Watch</button>
-						</div>
-					</form>
+					{:else}
+						<form
+							method="POST"
+							action="?/addWatch"
+							use:enhance={() => {
+								addingWatch = true;
+								return handleAddWatchSubmit();
+							}}
+						>
+							<div class="vane-form-group">
+								<label for="company" class="vane-mono">Select Company</label>
+								<SearchableSelect
+									options={companyOptions}
+									bind:value={selectedCompany}
+									name="cik"
+									placeholder="Search for a company..."
+									required
+								/>
+							</div>
+							<div class="vane-flyout-actions">
+								<button
+									type="button"
+									class="vane-btn vane-btn-secondary"
+									onclick={closeAddFlyout}
+									disabled={addingWatch}
+								>
+									Cancel
+								</button>
+								<button type="submit" class="vane-btn" disabled={addingWatch}>
+									{#if addingWatch}
+										<span class="vane-spinner"></span>
+										Adding...
+									{:else}
+										Add
+									{/if}
+								</button>
+							</div>
+						</form>
+					{/if}
+
+					<div class="vane-flyout-footer">
+						<a href="/contact" class="vane-mono vane-flyout-contact-link">
+							Missing risks? Contact us
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -270,14 +342,36 @@
 
 					<div class="vane-flyout-section">
 						<div class="vane-flyout-section-actions">
-							<form method="POST" action="?/removeWatch" use:enhance>
+							<form
+								method="POST"
+								action="?/removeWatch"
+								use:enhance={() => {
+									removingWatch = true;
+									return handleRemoveWatchSubmit();
+								}}
+							>
 								<input type="hidden" name="watchId" value={selectedWatch.id} />
-								<button type="submit" class="vane-btn-danger-flyout" style="width: 100%;">
-									Remove
+								<button
+									type="submit"
+									class="vane-btn-danger-flyout"
+									style="width: 100%;"
+									disabled={removingWatch}
+								>
+									{#if removingWatch}
+										<span class="vane-spinner"></span>
+										Removing...
+									{:else}
+										Remove
+									{/if}
 								</button>
 							</form>
 							<div></div>
 						</div>
+					</div>
+					<div class="vane-flyout-footer">
+						<a href="/contact" class="vane-mono vane-flyout-contact-link">
+							Missing risks? Contact us
+						</a>
 					</div>
 				</div>
 			</div>
@@ -344,7 +438,7 @@
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
 		font-size: 14px;
-		margin: 0 0 2rem;
+		margin: 0 0 1rem;
 		color: var(--vane-gray);
 	}
 
@@ -655,6 +749,68 @@
 		gap: 1rem;
 		justify-content: flex-end;
 		margin-top: 2rem;
+	}
+
+	.vane-flyout-footer {
+		margin-top: 2rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid #e3e8ef;
+		text-align: center;
+	}
+
+	.vane-flyout-contact-link {
+		font-size: 12px;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: var(--vane-gray);
+		text-decoration: none;
+		transition: color 0.15s ease;
+	}
+
+	.vane-flyout-contact-link:hover {
+		color: #ff7f0e;
+	}
+
+	.vane-spinner {
+		display: inline-block;
+		width: 14px;
+		height: 14px;
+		border: 2px solid currentColor;
+		border-right-color: transparent;
+		border-radius: 50%;
+		animation: spin 0.6s linear infinite;
+		margin-right: 0.5rem;
+		vertical-align: middle;
+	}
+
+	@keyframes spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
+	.vane-flyout-success {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 3rem 2rem;
+		text-align: center;
+		gap: 1rem;
+	}
+
+	.vane-success-icon {
+		width: 48px;
+		height: 48px;
+		color: #22c55e;
+	}
+
+	.vane-flyout-success p {
+		margin: 0;
+		color: #166534;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		font-size: 14px;
 	}
 
 	.vane-btn-sm {

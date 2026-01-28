@@ -230,6 +230,7 @@
 		color: var(--vane-gray);
 		font-family: var(--vane-mono);
 		font-size: 0.875rem;
+		margin-left: 0.5rem;
 	}
 
 	.vane-link-sm {

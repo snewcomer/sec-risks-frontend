@@ -4,7 +4,7 @@ import type { PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ params, locals: { safeGetSession, supabase } }) => {
 	const { session, user } = await safeGetSession();
 
-	if (!session) {
+	if (!session || !user) {
 		throw redirect(303, '/sign-in');
 	}
 

@@ -9,15 +9,15 @@
 	let error = $state('');
 	let loading = $state(false);
 
-	// Check for error in URL params
-	const urlError = $derived($page.url.searchParams.get('error'));
-	if (urlError) {
+	// Check for error in URL params reactively
+	$effect(() => {
+		const urlError = $page.url.searchParams.get('error');
 		if (urlError === 'auth_failed') {
 			error = 'Authentication failed. Please try again.';
 		} else if (urlError === 'no_code') {
 			error = 'No authorization code received.';
 		}
-	}
+	});
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();

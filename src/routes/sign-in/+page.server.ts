@@ -9,5 +9,7 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession } }) => {
 		throw redirect(303, '/risks');
 	}
 
-	return {};
+	return {
+		session: null
+	};
 };

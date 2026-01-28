@@ -6,7 +6,10 @@ import { RESEND_API_KEY } from '$env/static/private';
 const RATE_LIMIT_MAX = 3;
 const RATE_LIMIT_WINDOW = 60 * 15; // 15 minutes in seconds
 
-async function checkRateLimit(ip: string, kv: KVNamespace): Promise<boolean> {
+async function checkRateLimit(
+	ip: string,
+	kv: App.Platform['env']['RATE_LIMIT_KV']
+): Promise<boolean> {
 	const key = `rl:${ip}`;
 
 	const existing = await kv.get(key);

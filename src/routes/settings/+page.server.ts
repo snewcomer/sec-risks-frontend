@@ -6,7 +6,7 @@ import { error, redirect } from '@sveltejs/kit';
 export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase } }) => {
 	const { session, user } = await safeGetSession();
 
-	if (!session) {
+	if (!session || !user) {
 		throw redirect(303, '/sign-in');
 	}
 

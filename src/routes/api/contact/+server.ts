@@ -3,46 +3,36 @@ import type { RequestHandler } from './$types';
 import { RESEND_API_KEY } from '$env/static/private';
 
 // Rate limiting: max 3 requests per IP per 15 minutes
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_MAX = 3;
-const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
+const RATE_LIMIT_WINDOW = 60 * 15; // 15 minutes in seconds
 
-function checkRateLimit(ip: string): boolean {
-	const now = Date.now();
-	const record = rateLimitMap.get(ip);
+async function checkRateLimit(ip: string, kv: KVNamespace): Promise<boolean> {
+	const key = `rl:${ip}`;
 
-	if (!record || now > record.resetTime) {
-		rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
-		return true;
-	}
+	const existing = await kv.get(key);
+	const count = existing ? parseInt(existing, 10) : 0;
 
-	if (record.count >= RATE_LIMIT_MAX) {
+	if (count >= RATE_LIMIT_MAX) {
 		return false;
 	}
 
-	record.count++;
+	// Increment and set TTL
+	await kv.put(key, String(count + 1), {
+		expirationTtl: RATE_LIMIT_WINDOW
+	});
+
 	return true;
 }
 
-// Clean up old entries periodically
-setInterval(
-	() => {
-		const now = Date.now();
-		for (const [ip, record] of rateLimitMap.entries()) {
-			if (now > record.resetTime) {
-				rateLimitMap.delete(ip);
-			}
-		}
-	},
-	5 * 60 * 1000
-); // Clean every 5 minutes
-
-export const POST: RequestHandler = async ({ request, getClientAddress }) => {
+export const POST: RequestHandler = async ({ request, getClientAddress, platform }) => {
 	try {
-		// Rate limit check
+		// Rate limit check (skip if KV not available, e.g., in dev)
 		const clientIp = getClientAddress();
-		if (!checkRateLimit(clientIp)) {
-			throw error(429, 'Too many requests. Please try again later.');
+		if (platform?.env?.RATE_LIMIT_KV) {
+			const allowed = await checkRateLimit(clientIp, platform.env.RATE_LIMIT_KV);
+			if (!allowed) {
+				throw error(429, 'Too many requests. Please try again later.');
+			}
 		}
 
 		const { name, email, message, website } = await request.json();

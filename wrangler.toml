@@ -6,3 +6,7 @@ compatibility_flags = ["nodejs_compat"]
 [vars]
 PUBLIC_APP_URL = "https://vanerisk.com"
 PUBLIC_SUPABASE_URL = "https://vcbwbrzorjrfxsypabhl.supabase.co"
+
+[[kv_namespaces]]
+binding = "RATE_LIMITS"
+id = "c8c13aa514e14eef946de1ae98ee59e6"

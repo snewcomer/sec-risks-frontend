@@ -220,9 +220,7 @@
 		<div class="vane-cta">
 			<h2 class="vane-cta-headline">See it yourself.</h2>
 			<div class="vane-cta-buttons">
-				<a href="mailto:info@vanerisk.com?subject=Vane%20Demo%20Request" class="vane-btn-primary">
-					Let's chat →
-				</a>
+				<a href="/contact" class="vane-btn-primary"> Let's chat → </a>
 				<a href="/pricing" class="vane-btn-secondary">View pricing</a>
 			</div>
 		</div>

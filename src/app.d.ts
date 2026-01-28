@@ -14,7 +14,11 @@ declare global {
 			user?: Session['user'] | null;
 		}
 		// interface PageState {}
-		// interface Platform {}
+		interface Platform {
+			env: {
+				RATE_LIMIT_KV: KVNamespace;
+			};
+		}
 	}
 }
 

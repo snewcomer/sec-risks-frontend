@@ -103,52 +103,12 @@
 				</p>
 			</div>
 
-			<form class="vane-auth-form" onsubmit={handleSubmit}>
+			<div class="vane-auth-form">
 				{#if error}
 					<div class="vane-auth-error">
 						<span class="vane-mono">{error}</span>
 					</div>
 				{/if}
-
-				<div class="vane-form-group">
-					<label for="email" class="vane-form-label vane-mono">Email</label>
-					<input
-						type="email"
-						id="email"
-						name="email"
-						bind:value={email}
-						class="vane-form-input"
-						placeholder="you@company.com"
-						required
-						autocomplete="email"
-					/>
-				</div>
-
-				<div class="vane-form-group">
-					<label for="password" class="vane-form-label vane-mono">Password</label>
-					<input
-						type="password"
-						id="password"
-						name="password"
-						bind:value={password}
-						class="vane-form-input"
-						placeholder="Enter your password"
-						required
-						autocomplete="current-password"
-					/>
-				</div>
-
-				<div class="vane-form-actions">
-					<a href="/forgot-password" class="vane-form-link vane-mono">Forgot password?</a>
-				</div>
-
-				<button type="submit" class="vane-auth-button" disabled={loading}>
-					{loading ? 'Signing in...' : 'Sign In'}
-				</button>
-
-				<div class="vane-auth-divider">
-					<span class="vane-mono vane-gray">or</span>
-				</div>
 
 				<button
 					type="button"
@@ -159,11 +119,53 @@
 					<span>Continue with Google</span>
 				</button>
 
+				<div class="vane-auth-divider">
+					<span class="vane-mono vane-gray">or</span>
+				</div>
+
+				<form onsubmit={handleSubmit}>
+					<div class="vane-form-group">
+						<label for="email" class="vane-form-label vane-mono">Email</label>
+						<input
+							type="email"
+							id="email"
+							name="email"
+							bind:value={email}
+							class="vane-form-input"
+							placeholder="you@company.com"
+							required
+							autocomplete="email"
+						/>
+					</div>
+
+					<div class="vane-form-group">
+						<label for="password" class="vane-form-label vane-mono">Password</label>
+						<input
+							type="password"
+							id="password"
+							name="password"
+							bind:value={password}
+							class="vane-form-input"
+							placeholder="Enter your password"
+							required
+							autocomplete="current-password"
+						/>
+					</div>
+
+					<div class="vane-form-actions">
+						<a href="/forgot-password" class="vane-form-link vane-mono">Forgot password?</a>
+					</div>
+
+					<button type="submit" class="vane-auth-button" disabled={loading}>
+						{loading ? 'Signing in...' : 'Sign In'}
+					</button>
+				</form>
+
 				<div class="vane-auth-footer">
 					<span class="vane-mono vane-gray">Don't have an account?</span>
 					<a href="/sign-up" class="vane-form-link vane-mono">Sign up</a>
 				</div>
-			</form>
+			</div>
 		</div>
 	</section>
 </div>

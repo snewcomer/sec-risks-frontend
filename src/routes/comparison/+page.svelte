@@ -86,9 +86,6 @@
 				<span class="vane-mono vane-gray">SEC Risk Intelligence</span>
 			</a>
 		</div>
-		<div class="vane-nav-center">
-			<span class="vane-mono vane-gray">The Difference</span>
-		</div>
 		<div class="vane-nav-right">
 			<a href="/sign-in" class="vane-btn">Sign In</a>
 		</div>
@@ -234,7 +231,6 @@
 		<div class="vane-footer-links">
 			<a href="/" class="vane-footer-link">Home</a>
 			<a href="/pricing" class="vane-footer-link">Plans</a>
-			<a href="/privacy" class="vane-footer-link">Privacy</a>
 		</div>
 	</footer>
 </div>

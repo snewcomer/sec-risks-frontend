@@ -258,7 +258,6 @@
 		<div class="vane-footer-links">
 			<a href="/pricing" class="vane-footer-link">Plans</a>
 			<a href="/comparison" class="vane-footer-link">Compare</a>
-			<a href="/privacy" class="vane-footer-link">Privacy</a>
 		</div>
 	</footer>
 </div>

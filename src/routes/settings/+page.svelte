@@ -103,13 +103,17 @@
 								{data.subscription.status}
 							</span>
 						</div>
-						{#if data.subscription.current_period_end}
+						{#if data.subscription.items.data[0]?.current_period_end}
 							<div class="vane-settings-row">
 								<span class="vane-mono vane-gray vane-settings-label">
 									{data.subscription.cancel_at_period_end ? 'Ends' : 'Renews'} on
 								</span>
 								<span class="vane-mono">
-									{formatDate(new Date(data.subscription.current_period_end * 1000).toISOString())}
+									{formatDate(
+										new Date(
+											data.subscription.items.data[0].current_period_end * 1000
+										).toISOString()
+									)}
 								</span>
 							</div>
 						{/if}
@@ -285,7 +289,7 @@
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
 		font-size: 12px;
-		padding: 1rem 2rem;
+		padding: 0.75rem 1.5rem;
 		background: #c00;
 		color: white;
 		border: 1px solid #c00;

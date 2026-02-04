@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import DashboardNav from '$lib/components/DashboardNav.svelte';
+	import CoverageGauge from '$lib/components/CoverageGauge.svelte';
+	import GapPanel from '$lib/components/GapPanel.svelte';
 
 	let { data }: { data: PageData } = $props();
 
@@ -56,6 +58,18 @@
 				</a>
 			</div>
 		</header>
+
+		{#if data.totalIndustryThemes > 0}
+			<div class="vane-benchmarks">
+				<CoverageGauge
+					percent={data.coveragePct}
+					disclosed={data.companyThemeCount}
+					total={data.totalIndustryThemes}
+				/>
+
+				<GapPanel gaps={data.gaps} />
+			</div>
+		{/if}
 
 		<div class="vane-timeline">
 			{#if data.filings.length === 0}
@@ -205,6 +219,13 @@
 	.vane-ticker {
 		color: var(--vane-gray);
 		font-weight: 300;
+	}
+
+	/* Benchmarks */
+	.vane-benchmarks {
+		display: grid;
+		gap: 1.5rem;
+		margin-bottom: 3rem;
 	}
 
 	/* Filing Sections */

@@ -19,7 +19,8 @@
 	const companyOptions = $derived(
 		data.companies.map((company) => ({
 			value: company.cik,
-			label: `${company.name}${company.ticker ? ` (${company.ticker})` : ''}`
+			label: `${company.name}${company.ticker ? ` (${company.ticker})` : ''}`,
+			searchValue: [company.name, company.ticker].filter(Boolean).join(' ')
 		}))
 	);
 
@@ -136,7 +137,7 @@
 				<div
 					style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;"
 				>
-					<h2 class="vane-section-heading" style="margin: 0;">Company Watches</h2>
+					<h2 class="vane-section-heading" style="margin: 0;">Companies</h2>
 					{#if data.watches.length > 0}
 						<button class="vane-btn" onclick={openAddFlyout}> Track Company </button>
 					{/if}
@@ -162,7 +163,16 @@
 						{#each data.watches as watch}
 							<button class="vane-watch-card" onclick={() => openDetailsFlyout(watch)}>
 								<h3 class="vane-watch-name">{watch.companies?.name || 'Unknown Company'}</h3>
-								<p class="vane-mono vane-gray vane-watch-cik">CIK: {watch.cik}</p>
+								<p class="vane-mono vane-gray vane-watch-cik">
+									{#if watch.filings && watch.filings.length > 0}
+										Latest filing: {new Date(watch.filings[0].filing_date).toLocaleDateString(
+											'en-US',
+											{ year: 'numeric', month: 'short', day: 'numeric' }
+										)}
+									{:else}
+										No filings
+									{/if}
+								</p>
 							</button>
 						{/each}
 						{#if data.profile?.plan === 'free' && data.watches.length > 0}
@@ -574,10 +584,11 @@
 	.vane-flyout-close {
 		background: #f6f9fc;
 		border: 1px solid #ddd;
-		font-size: 1.5rem;
+		font-size: 1.25rem;
 		line-height: 1;
 		cursor: pointer;
 		padding: 0;
+		padding-bottom: 2px;
 		width: 2rem;
 		height: 2rem;
 		display: flex;
@@ -599,7 +610,7 @@
 	}
 
 	.vane-flyout-section {
-		margin-bottom: 2rem;
+		margin-bottom: 1rem;
 	}
 
 	.vane-flyout-section-actions {
@@ -712,7 +723,7 @@
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
 		font-size: 12px;
-		padding: 0.75rem 1rem;
+		padding: 0.5rem 0.5rem;
 		background: white;
 		color: #ef4444;
 		border: 1px solid #ef4444;

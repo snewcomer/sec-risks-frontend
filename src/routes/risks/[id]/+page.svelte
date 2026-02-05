@@ -67,7 +67,7 @@
 					total={data.totalIndustryThemes}
 				/>
 
-				<GapPanel gaps={data.gaps} />
+				<GapPanel gaps={data.gaps} sicCode={data.sicCode} />
 			</div>
 		{/if}
 

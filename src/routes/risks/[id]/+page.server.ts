@@ -59,7 +59,7 @@ export const load: PageServerLoad = async ({ params, locals: { safeGetSession, s
 	}));
 
 	// 4. Industry gap analysis for the most recent 10-K
-	let gaps: { theme_name: string; industry_freq: number }[] = [];
+	let gaps: { theme_name: string; industry_freq: number; theme_id: string }[] = [];
 	let coveragePct = 0;
 	let totalIndustryThemes = 0;
 	let companyThemeCount = 0;
@@ -101,6 +101,7 @@ export const load: PageServerLoad = async ({ params, locals: { safeGetSession, s
 		gaps,
 		coveragePct,
 		totalIndustryThemes,
-		companyThemeCount
+		companyThemeCount,
+		sicCode: String((watch.companies as any)?.sic_code ?? '')
 	};
 };

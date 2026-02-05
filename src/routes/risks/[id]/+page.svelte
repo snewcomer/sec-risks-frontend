@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import DashboardNav from '$lib/components/DashboardNav.svelte';
-	import CoverageGauge from '$lib/components/CoverageGauge.svelte';
 	import GapPanel from '$lib/components/GapPanel.svelte';
 
 	let { data }: { data: PageData } = $props();
@@ -61,13 +60,14 @@
 
 		{#if data.totalIndustryThemes > 0}
 			<div class="vane-benchmarks">
-				<CoverageGauge
+				<GapPanel
+					gaps={data.gaps}
+					sicCode={data.sicCode}
 					percent={data.coveragePct}
 					disclosed={data.companyThemeCount}
 					total={data.totalIndustryThemes}
+					watchMap={data.watchMap}
 				/>
-
-				<GapPanel gaps={data.gaps} sicCode={data.sicCode} />
 			</div>
 		{/if}
 
@@ -287,9 +287,9 @@
 	.vane-risk-header {
 		display: flex;
 		justify-content: space-between;
-		align-items: flex-start;
-		gap: 1rem;
-		margin-bottom: 1rem;
+		align-items: center;
+		gap: 0.75rem;
+		margin-bottom: 0.75rem;
 	}
 
 	.vane-risk-title {
@@ -299,6 +299,7 @@
 		margin: 0;
 		line-height: 1.4;
 		color: #1a1f36;
+		min-width: 0;
 	}
 
 	.vane-risk-summary {
@@ -311,20 +312,20 @@
 	/* Badges */
 	.vane-badges {
 		display: flex;
-		flex-direction: column;
-		align-items: flex-end;
-		gap: 0.5rem;
+		align-items: center;
+		gap: 0.375rem;
 		flex-shrink: 0;
 	}
 
 	.vane-badge {
 		font-family: var(--vane-mono);
-		font-size: 0.6875rem;
+		font-size: 0.625rem;
 		text-transform: uppercase;
-		padding: 0.25rem 0.5rem;
+		padding: 0.2rem 0.5rem;
 		border-radius: 4px;
 		letter-spacing: 0.05em;
 		white-space: nowrap;
+		line-height: 1.4;
 	}
 
 	.vane-badge-high {
@@ -400,14 +401,7 @@
 		}
 
 		.vane-risk-header {
-			flex-direction: column-reverse;
-			align-items: flex-start;
-		}
-
-		.vane-badges {
-			flex-direction: row;
-			align-items: center;
-			margin-bottom: 0.5rem;
+			flex-wrap: wrap;
 		}
 	}
 </style>

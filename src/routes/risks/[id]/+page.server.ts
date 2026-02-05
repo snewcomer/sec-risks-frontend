@@ -22,7 +22,18 @@ export const load: PageServerLoad = async ({ params, locals: { safeGetSession, s
 		throw error(404, 'Watch not found or access denied');
 	}
 
-	// 2. Fetch 10-K filings for this company with their risks
+	// 2. Fetch user's watches for cross-linking peers
+	const { data: allWatches } = await supabase
+		.from('user_watches')
+		.select('id, cik')
+		.eq('user_id', user.id);
+
+	const watchMap: Record<string, string> = {};
+	for (const w of allWatches || []) {
+		watchMap[String(w.cik)] = w.id;
+	}
+
+	// 3. Fetch 10-K filings for this company with their risks
 	const { data: filings, error: filingsError } = await supabase
 		.from('filings')
 		.select(
@@ -102,6 +113,7 @@ export const load: PageServerLoad = async ({ params, locals: { safeGetSession, s
 		coveragePct,
 		totalIndustryThemes,
 		companyThemeCount,
-		sicCode: String((watch.companies as any)?.sic_code ?? '')
+		sicCode: String((watch.companies as any)?.sic_code ?? ''),
+		watchMap
 	};
 };

@@ -5,12 +5,27 @@
 	type ThemeRisk = {
 		company_name: string;
 		ticker: string;
+		cik: string;
 		filing_date: string;
 		risk_title: string;
 		risk_summary: string;
 	};
 
-	let { gaps, sicCode }: { gaps: Gap[]; sicCode: string } = $props();
+	let {
+		gaps,
+		sicCode,
+		percent,
+		disclosed,
+		total,
+		watchMap = {}
+	}: {
+		gaps: Gap[];
+		sicCode: string;
+		percent: number;
+		disclosed: number;
+		total: number;
+		watchMap?: Record<string, string>;
+	} = $props();
 
 	let showAll = $state(false);
 
@@ -69,30 +84,45 @@
 	}
 </script>
 
-<div class="vane-gap-panel">
-	<h2 class="vane-gap-title">Expected Industry Disclosures Not Found</h2>
+<div class="vane-benchmark-card">
+	<div class="vane-coverage">
+		<div class="vane-coverage-header">
+			<h2 class="vane-coverage-title">Risk coverage vs. industry</h2>
+			<span class="vane-coverage-stat">
+				{percent}%
+				<span class="vane-coverage-detail">({disclosed} of {total} themes)</span>
+			</span>
+		</div>
+		<div class="vane-coverage-track">
+			<div class="vane-coverage-fill" style="width: {percent}%"></div>
+		</div>
+	</div>
 
-	{#if gaps.length === 0}
-		<div class="vane-gap-empty">
-			<span class="vane-mono vane-gray-light">This company covers all common industry themes.</span>
+	{#if gaps.length > 0}
+		<div class="vane-divider"></div>
+
+		<div class="vane-gaps">
+			<h3 class="vane-gaps-label">Peer themes</h3>
+			<ul class="vane-gap-list">
+				{#each visibleGaps as gap}
+					<li>
+						<button class="vane-gap-row" onclick={() => openFlyout(gap)}>
+							<span class="vane-gap-theme">{gap.theme_name}</span>
+							<span class="vane-gap-freq">{Math.round(gap.industry_freq)}% of peers</span>
+						</button>
+					</li>
+				{/each}
+			</ul>
+
+			{#if hasMore}
+				<button class="vane-gap-toggle" onclick={() => (showAll = !showAll)}>
+					{showAll ? 'Show less' : `Show all ${gaps.length} gaps`}
+				</button>
+			{/if}
 		</div>
 	{:else}
-		<ul class="vane-gap-list">
-			{#each visibleGaps as gap}
-				<li>
-					<button class="vane-gap-row" onclick={() => openFlyout(gap)}>
-						<span class="vane-gap-theme">{gap.theme_name}</span>
-						<span class="vane-gap-freq">{Math.round(gap.industry_freq)}% of peers</span>
-					</button>
-				</li>
-			{/each}
-		</ul>
-
-		{#if hasMore}
-			<button class="vane-gap-toggle" onclick={() => (showAll = !showAll)}>
-				{showAll ? 'Show less' : `Show all ${gaps.length} gaps`}
-			</button>
-		{/if}
+		<div class="vane-divider"></div>
+		<p class="vane-gap-empty">This company covers all common industry themes.</p>
 	{/if}
 </div>
 
@@ -139,9 +169,18 @@
 						{#each themeRisks as risk}
 							<article class="vane-theme-risk-card">
 								<div class="vane-theme-risk-meta">
-									<span class="vane-theme-risk-company">
-										{risk.company_name}{risk.ticker ? ` (${risk.ticker})` : ''}
-									</span>
+									{#if watchMap[String(risk.cik)]}
+										<a
+											href="/risks/{watchMap[String(risk.cik)]}"
+											class="vane-theme-risk-company vane-theme-risk-link"
+										>
+											{risk.company_name}{risk.ticker ? ` (${risk.ticker})` : ''}
+										</a>
+									{:else}
+										<span class="vane-theme-risk-company">
+											{risk.company_name}{risk.ticker ? ` (${risk.ticker})` : ''}
+										</span>
+									{/if}
 									<span class="vane-theme-risk-date">
 										{new Date(risk.filing_date).toLocaleDateString('en-US', {
 											year: 'numeric',
@@ -173,26 +212,82 @@
 {/if}
 
 <style>
-	.vane-gap-panel {
+	/* Combined card */
+	.vane-benchmark-card {
 		background: white;
 		border: 1px solid #e3e8ef;
 		border-radius: 12px;
-		padding: 1.5rem 2rem;
+		padding: 1.25rem 1.5rem;
 	}
 
-	.vane-gap-title {
+	.vane-divider {
+		height: 1px;
+		background: #e3e8ef;
+		margin: 1rem 0;
+	}
+
+	/* Coverage section */
+	.vane-coverage-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		margin-bottom: 0.625rem;
+	}
+
+	.vane-coverage-title {
 		font-family: var(--vane-display);
-		font-size: 1.25rem;
+		font-size: 1rem;
 		font-weight: 500;
-		margin: 0 0 1.25rem;
+		margin: 0;
 		color: #1a1f36;
 	}
 
+	.vane-coverage-stat {
+		font-family: var(--vane-mono);
+		font-size: 0.9375rem;
+		font-weight: 600;
+		color: #1a1f36;
+	}
+
+	.vane-coverage-detail {
+		font-weight: 400;
+		font-size: 0.75rem;
+		color: var(--vane-gray);
+	}
+
+	.vane-coverage-track {
+		height: 6px;
+		background: #eef2f6;
+		border-radius: 3px;
+		overflow: hidden;
+	}
+
+	.vane-coverage-fill {
+		height: 100%;
+		background: #ff7f0e;
+		border-radius: 3px;
+		transition: width 0.6s ease;
+		min-width: 0;
+	}
+
+	/* Gaps section */
+	.vane-gaps-label {
+		font-family: var(--vane-mono);
+		font-size: 0.6875rem;
+		font-weight: 400;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		margin: 0 0 0.375rem;
+		color: var(--vane-gray);
+	}
+
 	.vane-gap-empty {
+		margin: 0;
+		font-family: var(--vane-mono);
+		font-size: 0.8125rem;
+		color: var(--vane-gray);
 		text-align: center;
-		padding: 2rem;
-		border: 2px dashed #e3e8ef;
-		border-radius: 8px;
+		padding: 0.5rem 0;
 	}
 
 	.vane-gap-list {
@@ -205,7 +300,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding: 0.75rem 0;
+		padding: 0.5rem 0;
 		border-bottom: 1px solid #f0f2f5;
 		width: 100%;
 		background: none;
@@ -225,7 +320,7 @@
 	}
 
 	.vane-gap-theme {
-		font-size: 0.9375rem;
+		font-size: 0.875rem;
 		color: #1a1f36;
 		font-weight: 500;
 		text-align: left;
@@ -233,10 +328,10 @@
 
 	.vane-gap-freq {
 		font-family: var(--vane-mono);
-		font-size: 0.6875rem;
+		font-size: 0.625rem;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
-		padding: 0.25rem 0.5rem;
+		padding: 0.2rem 0.4rem;
 		border-radius: 4px;
 		background: #fef2f2;
 		color: #991b1b;
@@ -247,12 +342,12 @@
 	.vane-gap-toggle {
 		display: block;
 		width: 100%;
-		margin-top: 1rem;
-		padding: 0.5rem;
+		margin-top: 0.5rem;
+		padding: 0.375rem;
 		background: none;
 		border: none;
 		font-family: var(--vane-mono);
-		font-size: 0.75rem;
+		font-size: 0.6875rem;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
 		color: #ff7f0e;
@@ -385,6 +480,16 @@
 		color: #1a1f36;
 		text-transform: uppercase;
 		letter-spacing: 0.03em;
+	}
+
+	.vane-theme-risk-link {
+		text-decoration: none;
+		color: #ff7f0e;
+		transition: color 0.15s;
+	}
+
+	.vane-theme-risk-link:hover {
+		color: #b8860b;
 	}
 
 	.vane-theme-risk-date {

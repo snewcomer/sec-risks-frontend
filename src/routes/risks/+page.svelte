@@ -19,7 +19,8 @@
 	const companyOptions = $derived(
 		data.companies.map((company) => ({
 			value: company.cik,
-			label: `${company.name}${company.ticker ? ` (${company.ticker})` : ''}`
+			label: `${company.name}${company.ticker ? ` (${company.ticker})` : ''}`,
+			searchValue: [company.name, company.ticker].filter(Boolean).join(' ')
 		}))
 	);
 

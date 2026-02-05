@@ -2,6 +2,7 @@
 	type Option = {
 		value: string;
 		label: string;
+		searchValue?: string;
 	};
 
 	let {
@@ -29,7 +30,11 @@
 	const filteredOptions = $derived(
 		searchQuery.trim() === ''
 			? options
-			: options.filter((option) => option.label.toLowerCase().includes(searchQuery.toLowerCase()))
+			: options.filter((option) => {
+					const query = searchQuery.toLowerCase();
+					const searchTarget = option.searchValue ?? option.label;
+					return searchTarget.toLowerCase().includes(query);
+				})
 	);
 
 	const selectedOption = $derived(options.find((opt) => opt.value === value));

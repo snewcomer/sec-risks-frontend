@@ -49,6 +49,7 @@ export const load: PageServerLoad = async ({ params, locals: { safeGetSession, s
 				risk_summary,
 				category,
 				severity,
+				theme_id,
 				position
 			)
 		`
@@ -74,19 +75,21 @@ export const load: PageServerLoad = async ({ params, locals: { safeGetSession, s
 	let coveragePct = 0;
 	let totalIndustryThemes = 0;
 	let companyThemeCount = 0;
+	const categoryThemeMap: Record<string, string> = {};
 
 	const latestFiling = processedFilings?.[0];
 	if (latestFiling?.accession_number) {
 		const sicCode = (watch.companies as any)?.sic_code;
 
-		// Run gap analysis and total theme count in parallel
-		const [gapResult, benchmarkResult] = await Promise.all([
+		// Run gap analysis, benchmark count, and theme lookup in parallel
+		const [gapResult, benchmarkResult, themesResult] = await Promise.all([
 			supabase.rpc('get_dashboard_gaps', {
 				target_accession: latestFiling.accession_number
 			}),
 			sicCode
 				? supabase.from('industry_benchmarks').select('theme_id').eq('sic_code', sicCode)
-				: Promise.resolve({ data: null, error: null })
+				: Promise.resolve({ data: null, error: null }),
+			supabase.from('risk_themes').select('theme_id, theme_name')
 		]);
 
 		if (gapResult.data) {
@@ -96,11 +99,41 @@ export const load: PageServerLoad = async ({ params, locals: { safeGetSession, s
 			console.error('Error fetching gaps:', gapResult.error);
 		}
 
+		if (benchmarkResult.error) {
+			console.error('Error fetching benchmarks:', benchmarkResult.error);
+		}
+		if (themesResult.error) {
+			console.error('Error fetching themes:', themesResult.error);
+		}
+
+		// Build theme_id → theme_name lookup from risk_themes
+		const themeIdToName: Record<string, string> = {};
+		for (const t of themesResult.data || []) {
+			if (t.theme_id && t.theme_name) {
+				themeIdToName[t.theme_id] = t.theme_name;
+			}
+		}
+
 		if (benchmarkResult.data) {
 			totalIndustryThemes = benchmarkResult.data.length;
 			companyThemeCount = totalIndustryThemes - gaps.length;
 			coveragePct =
 				totalIndustryThemes > 0 ? Math.round((companyThemeCount / totalIndustryThemes) * 100) : 0;
+
+			// Build category (theme_name) → theme_id map for clickable badges
+			for (const b of benchmarkResult.data as any[]) {
+				const themeName = themeIdToName[b.theme_id];
+				if (themeName && b.theme_id) {
+					categoryThemeMap[b.theme_id] = themeName;
+				}
+			}
+		}
+
+		// Also build map from gaps data (these are missing themes but still have theme_name → theme_id)
+		for (const g of gaps) {
+			if (g.theme_name && g.theme_id) {
+				categoryThemeMap[g.theme_id] = g.theme_name;
+			}
 		}
 	}
 
@@ -114,6 +147,7 @@ export const load: PageServerLoad = async ({ params, locals: { safeGetSession, s
 		totalIndustryThemes,
 		companyThemeCount,
 		sicCode: String((watch.companies as any)?.sic_code ?? ''),
-		watchMap
+		watchMap,
+		categoryThemeMap
 	};
 };

@@ -2,6 +2,7 @@
 	import type { PageData } from './$types';
 	import DashboardNav from '$lib/components/DashboardNav.svelte';
 	import GapPanel from '$lib/components/GapPanel.svelte';
+	import ThemeRisksFlyout from '$lib/components/ThemeRisksFlyout.svelte';
 
 	let { data }: { data: PageData } = $props();
 
@@ -16,6 +17,15 @@
 			default:
 				return 'vane-badge-neutral';
 		}
+	}
+
+	// Flyout ref for category badge clicks
+	let categoryFlyoutRef: ThemeRisksFlyout;
+
+	function openCategoryFlyout(themeId: string) {
+		const themeName = data.categoryThemeMap?.[themeId];
+		if (!themeName) return;
+		categoryFlyoutRef?.open(themeName, themeId);
 	}
 </script>
 
@@ -116,9 +126,19 @@
 												</span>
 											{/if}
 											{#if risk.category}
-												<span class="vane-badge vane-badge-outline">
-													{risk.category}
-												</span>
+												{#if data.categoryThemeMap?.[risk.theme_id]}
+													<button
+														class="vane-badge vane-badge-outline vane-badge-clickable"
+														type="button"
+														onclick={() => openCategoryFlyout(risk.theme_id)}
+													>
+														{risk.category}
+													</button>
+												{:else}
+													<span class="vane-badge vane-badge-outline">
+														{risk.category}
+													</span>
+												{/if}
 											{/if}
 										</div>
 									</div>
@@ -132,6 +152,8 @@
 		</div>
 	</main>
 </div>
+
+<ThemeRisksFlyout bind:this={categoryFlyoutRef} sicCode={data.sicCode} watchMap={data.watchMap} />
 
 <style>
 	/* Layout & Base */
@@ -355,6 +377,17 @@
 		background: transparent;
 		border: 1px solid #e3e8ef;
 		color: #4b5563;
+	}
+
+	.vane-badge-clickable {
+		cursor: pointer;
+		transition: all 0.15s ease;
+	}
+
+	.vane-badge-clickable:hover {
+		border-color: #ff7f0e;
+		color: #ff7f0e;
+		background: #fff7ed;
 	}
 
 	/* Utilities */

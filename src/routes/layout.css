@@ -113,6 +113,60 @@ body {
 	max-width: 900px;
 }
 
+.vane-hero-badge {
+	display: inline-block;
+	background: var(--vane-black);
+	color: white;
+	padding: 0.5rem 1rem;
+	margin-bottom: 2rem;
+	border-radius: 6px;
+	min-width: 300px;
+	text-align: center;
+	position: relative;
+	overflow: hidden;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.vane-hero-badge::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255, 235, 59, 0.3), transparent);
+	animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+	0% {
+		left: -100%;
+	}
+	50%,
+	100% {
+		left: 100%;
+	}
+}
+
+.vane-hero-badge .vane-mono {
+	font-size: 12px;
+	letter-spacing: 0.05em;
+	animation: slideRotate 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+	display: inline-block;
+	position: relative;
+}
+
+@keyframes slideRotate {
+	0% {
+		opacity: 0;
+		transform: translateY(-20px) rotateX(-90deg);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0) rotateX(0deg);
+	}
+}
+
 .vane-headline {
 	font-family: var(--vane-display);
 	font-size: clamp(4rem, 12vw, 10rem);

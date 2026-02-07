@@ -10,8 +10,40 @@
 	let accessSuccess = $state(false);
 	let accessError = $state('');
 
+	// Ticker rotation data
+	const tickers = [
+		{ ticker: 'WMT', date: 'Mar 20' },
+		{ ticker: 'NOW', date: 'Feb 5' },
+		{ ticker: 'DOW', date: 'Feb 13' },
+		{ ticker: 'NVDA', date: 'Feb 26' },
+		{ ticker: 'MU', date: 'Jan 8' },
+		{ ticker: 'XOM', date: 'Feb 28' },
+		{ ticker: 'AAPL', date: 'Nov 1' },
+		{ ticker: 'MSFT', date: 'Jul 30' },
+		{ ticker: 'TSLA', date: 'Jan 29' }
+	];
+
+	let currentTickerIndex = $state(0);
+	let showMessage = $state(true);
+
 	onMount(() => {
 		heroVisible = true;
+
+		// Rotate between message and tickers
+		const interval = setInterval(() => {
+			if (showMessage) {
+				// Switch to ticker
+				showMessage = false;
+			} else {
+				// Move to next ticker or back to message
+				currentTickerIndex = (currentTickerIndex + 1) % tickers.length;
+				if (currentTickerIndex === 0) {
+					showMessage = true;
+				}
+			}
+		}, 2500);
+
+		return () => clearInterval(interval);
 	});
 
 	async function handleAccessSubmit(e: Event) {
@@ -48,32 +80,32 @@
 </script>
 
 <svelte:head>
-	<title>Vane - SEC Risk Intelligence & Filing Alerts</title>
+	<title>Vane - 2026 10-Ks Are In. Track SEC Risk Changes for Free</title>
 	<meta
 		name="description"
-		content="Detect meaningful risk escalations in SEC 10-K and 10-Q filings. Get push-based alerts when risk disclosures shift from hypothetical to factual. Know first."
+		content="2026 10-K season is here! Vane automatically detects when risk disclosures shift from 'might happen' to 'is happening' in SEC filings. Try free, know first."
 	/>
 	<meta
 		name="keywords"
-		content="SEC filings, risk factors, 10-K, 10-Q, financial risk analysis, risk intelligence, compliance alerts"
+		content="SEC filings, 2026 10-K, risk factors, 10-Q, financial risk analysis, risk intelligence, compliance alerts, SEC monitoring"
 	/>
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://vanerisk.com/" />
-	<meta property="og:title" content="Vane - SEC Risk Intelligence & Filing Alerts" />
+	<meta property="og:title" content="Vane - 2026 10-Ks Are In. Track SEC Risk Changes for Free" />
 	<meta
 		property="og:description"
-		content="Detect meaningful risk escalations in SEC 10-K and 10-Q filings. Get push-based alerts when risk disclosures shift."
+		content="2026 10-K season is here! Automatically detect when risk disclosures shift from hypothetical to factual. Try free."
 	/>
 
 	<!-- Twitter -->
 	<meta property="twitter:card" content="summary_large_image" />
 	<meta property="twitter:url" content="https://vanerisk.com/" />
-	<meta property="twitter:title" content="Vane - SEC Risk Intelligence & Filing Alerts" />
+	<meta property="twitter:title" content="Vane - 2026 10-Ks Are In. Track SEC Risk Changes" />
 	<meta
 		property="twitter:description"
-		content="Detect meaningful risk escalations in SEC 10-K and 10-Q filings. Get push-based alerts when risk disclosures shift."
+		content="2026 10-K season is here! Automatically detect when risk disclosures shift from hypothetical to factual. Try free."
 	/>
 
 	<!-- Canonical -->
@@ -91,7 +123,7 @@
 			"price": "0",
 			"priceCurrency": "USD"
 		},
-		"description": "Detect meaningful risk escalations in SEC 10-K and 10-Q filings. Get push-based alerts when risk disclosures shift from hypothetical to factual.",
+		"description": "Track SEC risk disclosures automatically. Vane detects when companies shift from hypothetical risks to factual events in 10-K and 10-Q filings. Free plan available.",
 		"operatingSystem": "Web",
 		"provider": {
 			"@type": "Organization",
@@ -131,12 +163,27 @@
 	<!-- Hero -->
 	<section class="vane-hero">
 		<div class="vane-hero-content">
+			<div class="vane-hero-badge">
+				{#if showMessage}
+					<span class="vane-mono" key="message">2026 10-Ks are in — Try Vane for free</span>
+				{:else}
+					<span class="vane-mono" key={tickers[currentTickerIndex].ticker}>
+						<span style="color: var(--vane-yellow); font-weight: 700;"
+							>{tickers[currentTickerIndex].ticker}</span
+						>
+						— {tickers[currentTickerIndex].date}
+					</span>
+				{/if}
+			</div>
 			<h1 class="vane-headline">Risk clarity</h1>
 			<p class="vane-subhead">
-				SEC filings contain critical risk signals buried in legal prose. Vane Risks detects
-				meaningful escalations in 10-K and 10-Q disclosures and alerts, giving you informed decision
-				making power.
+				Track when companies shift from "might happen" to "is happening" in their SEC filings. Free
+				to start, alerts when it matters.
 			</p>
+			<div class="vane-cta-buttons">
+				<a href="/sign-in" class="vane-btn-primary">Try Vane Free</a>
+				<a href="/pricing" class="vane-btn-secondary">See Plans</a>
+			</div>
 			<div class="vane-target">
 				<div class="vane-target-ring"></div>
 				<div class="vane-target-ring"></div>
@@ -218,35 +265,17 @@
 	</section>
 
 	<!-- CTA Section -->
-	<section class="vane-section vane-section-yellow">
+	<section class="vane-section vane-section-cta">
 		<div class="vane-cta">
-			<h2 class="vane-cta-headline">Know first.</h2>
+			<h2 class="vane-cta-headline">Start tracking risks today</h2>
 			<p class="vane-mono vane-gray vane-cta-text">
-				Get early access to risk escalation alerts. Be the first to know when filings signal
-				material change.
+				Free plan includes tracking up to 3 companies. Upgrade anytime to track your entire
+				portfolio. No credit card required to start.
 			</p>
-			{#if accessSuccess}
-				<p class="vane-mono vane-access-success">Thanks! We'll be in touch soon.</p>
-			{:else}
-				<form class="vane-form" onsubmit={handleAccessSubmit}>
-					<input
-						type="email"
-						name="email"
-						bind:value={accessEmail}
-						class="vane-input"
-						placeholder="Your email"
-						required
-						aria-label="Email address"
-						disabled={accessLoading}
-					/>
-					<button type="submit" class="vane-submit" disabled={accessLoading}>
-						{accessLoading ? 'Sending...' : 'Get access'}
-					</button>
-				</form>
-				{#if accessError}
-					<p class="vane-mono vane-access-error">{accessError}</p>
-				{/if}
-			{/if}
+			<div class="vane-cta-buttons">
+				<a href="/sign-in" class="vane-btn-primary">Start Free</a>
+				<a href="/pricing" class="vane-btn-secondary">View Pricing</a>
+			</div>
 		</div>
 	</section>
 

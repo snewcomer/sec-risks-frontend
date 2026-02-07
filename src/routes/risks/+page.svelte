@@ -341,6 +341,8 @@
 						<dl class="vane-details-list">
 							<dt class="vane-mono">CIK</dt>
 							<dd>{selectedWatch.cik}</dd>
+							<dt class="vane-mono">SIC</dt>
+							<dd>{selectedWatch.companies.sic_code}</dd>
 							<dt class="vane-mono">Watching Since</dt>
 							<dd>{new Date(selectedWatch.created_at).toLocaleDateString()}</dd>
 							{#if selectedWatch.filings && selectedWatch.filings.length > 0}
@@ -471,7 +473,7 @@
 	}
 
 	.vane-watch-card {
-		padding: 1.75rem;
+		padding: 1.25rem;
 		border: 1px solid #e3e8ef;
 		background: white;
 		cursor: pointer;

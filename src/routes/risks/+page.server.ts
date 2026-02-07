@@ -13,12 +13,12 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase 
 		supabase.from('profiles').select('*').eq('id', user.id).maybeSingle(),
 		supabase
 			.from('user_watches')
-			.select('*, companies(cik, name, ticker)')
+			.select('*, companies(cik, sic_code, name, ticker)')
 			.eq('user_id', user.id)
 			.order('created_at', { ascending: false }),
 		supabase
 			.from('companies')
-			.select('cik, name, ticker, filings!inner(cik)')
+			.select('cik, sic_code, name, ticker, filings!inner(cik)')
 			.order('name', { ascending: true })
 	]);
 
@@ -76,10 +76,10 @@ export const actions: Actions = {
 		const plan = profileRes.data?.plan || 'free';
 		const count = countRes.count || 0;
 
-		if (plan === 'free' && count >= 1) {
+		if (plan === 'free' && count >= 3) {
 			return fail(403, {
 				error:
-					'Free plan is limited to 1 company watch. Upgrade to Professional to keep an eye on more companies.',
+					'Free plan is limited to 3 company watches. Upgrade to Professional to keep an eye on more companies.',
 				needsUpgrade: true
 			});
 		}

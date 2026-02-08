@@ -12,15 +12,15 @@
 
 	// Ticker rotation data
 	const tickers = [
-		{ ticker: 'WMT', date: 'Mar 20' },
-		{ ticker: 'NOW', date: 'Feb 5' },
-		{ ticker: 'DOW', date: 'Feb 13' },
-		{ ticker: 'NVDA', date: 'Feb 26' },
-		{ ticker: 'MU', date: 'Jan 8' },
-		{ ticker: 'XOM', date: 'Feb 28' },
-		{ ticker: 'AAPL', date: 'Nov 1' },
-		{ ticker: 'MSFT', date: 'Jul 30' },
-		{ ticker: 'TSLA', date: 'Jan 29' }
+		{ ticker: 'WMT', date: 'Dec 2, 2025' },
+		{ ticker: 'NOW', date: 'Oct 30, 2025' },
+		{ ticker: 'DOW', date: 'Feb 3, 2026' },
+		{ ticker: 'NVDA', date: 'Nov 11, 2025' },
+		{ ticker: 'MU', date: 'Dec 18, 2025' },
+		{ ticker: 'XOM', date: 'Nov 3, 2025' },
+		{ ticker: 'AAPL', date: 'Jan 30, 2026' },
+		{ ticker: 'MSFT', date: 'Oct 29, 2025' },
+		{ ticker: 'TSLA', date: 'Jan 29, 2026' }
 	];
 
 	let currentTickerIndex = $state(0);

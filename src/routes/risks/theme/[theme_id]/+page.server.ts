@@ -13,7 +13,7 @@ export const load: PageServerLoad = async ({
 	}
 
 	const themeId = params.theme_id;
-	const limit = parseInt(url.searchParams.get('limit') || '20');
+	const limit = parseInt(url.searchParams.get('limit') || '30');
 
 	// Get theme info and risks in parallel
 	const [themeResult, risksResult, watchesResult] = await Promise.all([

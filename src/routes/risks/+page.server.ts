@@ -1,5 +1,6 @@
 import { redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
+import { getIndustryName } from '$lib/utils/sic-codes';
 
 export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase } }) => {
 	const { session, user } = await safeGetSession();
@@ -8,8 +9,21 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase 
 		throw redirect(303, '/sign-in');
 	}
 
+	// Calculate 30 days ago for HUD metrics
+	const thirtyDaysAgo = new Date();
+	thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+	const thirtyDaysAgoISO = thirtyDaysAgo.toISOString();
+
 	// Parallelize data fetching for better performance
-	const [profileResult, watchesResult, companiesResult, trendingResult] = await Promise.all([
+	const [
+		profileResult,
+		watchesResult,
+		companiesResult,
+		trendingResult,
+		newRisksResult,
+		highSeverityResult,
+		sectorHeatResult
+	] = await Promise.all([
 		supabase.from('profiles').select('*').eq('id', user.id).maybeSingle(),
 		supabase
 			.from('user_watches')
@@ -24,7 +38,20 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase 
 			.from('mv_trending_pills')
 			.select('theme_id, theme_name, company_reach')
 			.order('company_reach', { ascending: false })
-			.limit(15)
+			.limit(20),
+		// HUD: New risks in last 30 days
+		supabase
+			.from('risks')
+			.select('*', { count: 'exact', head: true })
+			.gte('created_at', thirtyDaysAgoISO),
+		// HUD: High severity risks count
+		supabase.from('risks').select('*', { count: 'exact', head: true }).eq('severity', 'High'),
+		// HUD: Sector heat - most frequent SIC in last 30 days
+		supabase
+			.from('risks')
+			.select('filings!inner(companies!inner(sic_code))')
+			.gte('created_at', thirtyDaysAgoISO)
+			.limit(1000)
 	]);
 
 	// Fetch filings separately for each watch
@@ -48,6 +75,32 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase 
 	if (watchesResult.error) console.error('Load Error (Watches):', watchesResult.error);
 	if (companiesResult.error) console.error('Load Error (Companies):', companiesResult.error);
 	if (trendingResult.error) console.error('Load Error (Trending):', trendingResult.error);
+	if (newRisksResult.error) console.error('Load Error (New Risks):', newRisksResult.error);
+	if (highSeverityResult.error)
+		console.error('Load Error (High Severity):', highSeverityResult.error);
+	if (sectorHeatResult.error) console.error('Load Error (Sector Heat):', sectorHeatResult.error);
+
+	// Calculate sector heat - top 3 most frequent SIC codes in last 30 days
+	let sectorHeat: { sic_code: string; count: number; industry: string }[] = [];
+	if (sectorHeatResult.data && sectorHeatResult.data.length > 0) {
+		const sicCounts: Record<string, number> = {};
+		for (const risk of sectorHeatResult.data as any[]) {
+			const sicCode = risk.filings?.companies?.sic_code;
+			if (sicCode) {
+				sicCounts[sicCode] = (sicCounts[sicCode] || 0) + 1;
+			}
+		}
+		// Get top 3 SIC codes
+		const topSics = Object.entries(sicCounts)
+			.sort((a, b) => b[1] - a[1])
+			.slice(0, 3);
+
+		sectorHeat = topSics.map(([sicCode, count]) => ({
+			sic_code: sicCode,
+			count,
+			industry: getIndustryName(sicCode)
+		}));
+	}
 
 	return {
 		session,
@@ -55,7 +108,12 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase 
 		profile: profileResult.data || null,
 		watches: watchesResult.data || [],
 		companies: companiesResult.data || [],
-		trendingThemes: trendingResult.data || []
+		trendingThemes: trendingResult.data || [],
+		hud: {
+			newRisks: newRisksResult.count || 0,
+			highSeverity: highSeverityResult.count || 0,
+			sectorHeat
+		}
 	};
 };
 

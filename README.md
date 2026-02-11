@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 # sec-risks-frontend
 
 =======

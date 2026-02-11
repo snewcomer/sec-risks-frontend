@@ -198,9 +198,11 @@
 					</ul>
 
 					{#if data.session && plan.priceId}
-						<button onclick={handleUpgrade} class="vane-plan-cta">
-							{plan.cta}
-						</button>
+						{#if data.profile?.plan === 'professional' || data.profile?.plan === 'enterprise'}
+							<a href="/risks" class="vane-plan-cta"> Go to Dashboard </a>
+						{:else}
+							<button onclick={handleUpgrade} class="vane-plan-cta"> Upgrade Now </button>
+						{/if}
 					{:else}
 						<a href={plan.href} class="vane-plan-cta">
 							{plan.cta}
@@ -232,7 +234,11 @@
 			</p>
 			<div class="vane-cta-buttons">
 				{#if data.session}
-					<button onclick={handleUpgrade} class="vane-btn-primary"> Get Started </button>
+					{#if data.profile?.plan === 'professional' || data.profile?.plan === 'enterprise'}
+						<a href="/risks" class="vane-btn-primary">Go to Dashboard</a>
+					{:else}
+						<button onclick={handleUpgrade} class="vane-btn-primary">Upgrade Now</button>
+					{/if}
 				{:else}
 					<a href="/sign-up?plan=professional" class="vane-btn-primary">Get Started</a>
 				{/if}

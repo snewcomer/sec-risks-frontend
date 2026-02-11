@@ -122,14 +122,41 @@
 	<section class="vane-dashboard">
 		<div class="vane-dashboard-container">
 			<header class="vane-dashboard-header">
-				<div>
-					<h1 class="vane-dashboard-headline">SEC Risk Monitor</h1>
-					<p class="vane-mono vane-gray">
-						Welcome back, {data.profile?.name || data.profile?.email}
-					</p>
+				<div class="vane-header-top">
+					<div>
+						<h1 class="vane-dashboard-headline">Command center</h1>
+					</div>
+					<div class="vane-plan-badge vane-plan-badge-{data.profile?.plan}">
+						<span class="vane-mono">{data.profile?.plan || 'free'} plan</span>
+					</div>
 				</div>
-				<div class="vane-plan-badge vane-plan-badge-{data.profile?.plan}">
-					<span class="vane-mono">{data.profile?.plan || 'free'} plan</span>
+
+				<div class="vane-hud">
+					<div class="vane-hud-item">
+						<span class="vane-hud-label">New risks (30d)</span>
+						<span class="vane-hud-value">{data.hud?.newRisks?.toLocaleString() || 0}</span>
+					</div>
+					<div class="vane-hud-divider"></div>
+					<div class="vane-hud-item vane-hud-danger">
+						<span class="vane-hud-label">High severity</span>
+						<span class="vane-hud-value">{data.hud?.highSeverity?.toLocaleString() || 0}</span>
+					</div>
+					{#if data.hud?.sectorHeat && data.hud.sectorHeat.length > 0}
+						<div class="vane-hud-divider"></div>
+						<div class="vane-hud-item">
+							<span class="vane-hud-label">Sector heat</span>
+							<div class="vane-sector-chips">
+								{#each data.hud.sectorHeat as sector}
+									<span
+										class="vane-sector-chip"
+										title="SIC {sector.sic_code} — {sector.count} risks"
+									>
+										{sector.industry}
+									</span>
+								{/each}
+							</div>
+						</div>
+					{/if}
 				</div>
 			</header>
 
@@ -199,7 +226,7 @@
 				{/if}
 			</section>
 
-			<section class="vane-dashboard-section">
+			<!-- <section class="vane-dashboard-section">
 				<h2 class="vane-section-heading">Recent Alerts</h2>
 				<div class="vane-empty-state">
 					<p class="vane-mono vane-gray">
@@ -207,7 +234,7 @@
 						companies.
 					</p>
 				</div>
-			</section>
+			</section> -->
 		</div>
 	</section>
 
@@ -358,13 +385,7 @@
 				</div>
 
 				<div class="vane-flyout-content">
-					<div class="vane-flyout-section" style="margin-top: 0;">
-						<a href="/risks/{selectedWatch.id}" class="vane-btn vane-btn-primary vane-mono">
-							View risks
-						</a>
-					</div>
 					<div class="vane-flyout-section">
-						<h3 class="vane-mono vane-flyout-section-title">Company Details</h3>
 						<dl class="vane-details-list">
 							<dt class="vane-mono">CIK</dt>
 							<dd>{selectedWatch.cik}</dd>
@@ -380,7 +401,10 @@
 					</div>
 
 					<div class="vane-flyout-section">
-						<div class="vane-flyout-section-actions">
+						<div class="vane-flyout-actions-row">
+							<a href="/risks/{selectedWatch.id}" class="vane-btn vane-btn-primary vane-mono">
+								View risks
+							</a>
 							<form
 								method="POST"
 								action="?/removeWatch"
@@ -390,12 +414,7 @@
 								}}
 							>
 								<input type="hidden" name="watchId" value={selectedWatch.id} />
-								<button
-									type="submit"
-									class="vane-btn-danger-flyout"
-									style="width: 100%;"
-									disabled={removingWatch}
-								>
+								<button type="submit" class="vane-btn vane-btn-danger" disabled={removingWatch}>
 									{#if removingWatch}
 										<span class="vane-spinner"></span>
 										Removing...
@@ -404,7 +423,6 @@
 									{/if}
 								</button>
 							</form>
-							<div></div>
 						</div>
 					</div>
 
@@ -446,8 +464,8 @@
 
 	.vane-dashboard-header {
 		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
+		flex-direction: column;
+		gap: 0.75rem;
 		margin-bottom: 2rem;
 		padding: 2rem;
 		background: white;
@@ -455,11 +473,78 @@
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 	}
 
+	.vane-header-top {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+	}
+
 	.vane-dashboard-headline {
 		font-family: var(--vane-display);
 		font-size: clamp(2rem, 4vw, 3rem);
 		font-weight: 400;
 		margin: 0 0 0.5rem;
+	}
+
+	/* HUD */
+	.vane-hud {
+		display: flex;
+		align-items: center;
+		gap: 1.5rem;
+		padding: 0.875rem 1.25rem;
+		background: #f6f9fc;
+		border-radius: 6px;
+		border: 1px solid #e3e8ef;
+	}
+
+	.vane-hud-item {
+		display: flex;
+		flex-direction: column;
+		gap: 0.125rem;
+	}
+
+	.vane-hud-label {
+		font-family: var(--vane-mono);
+		font-size: 0.625rem;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--vane-gray);
+	}
+
+	.vane-hud-value {
+		font-family: var(--vane-mono);
+		font-size: 1rem;
+		font-weight: 600;
+		color: #1a1f36;
+		letter-spacing: -0.01em;
+	}
+
+	.vane-hud-danger .vane-hud-value {
+		color: #dc2626;
+	}
+
+	.vane-hud-divider {
+		width: 1px;
+		height: 1.5rem;
+		background: #e3e8ef;
+	}
+
+	/* Sector Heat Chips */
+	.vane-sector-chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.375rem;
+	}
+
+	.vane-sector-chip {
+		font-family: var(--vane-mono);
+		font-size: 0.6875rem;
+		padding: 0.125rem 0.5rem;
+		background: #fff7ed;
+		border: 1px solid #fed7aa;
+		border-radius: 4px;
+		color: #b8520e;
+		cursor: default;
 	}
 
 	.vane-plan-badge {
@@ -483,7 +568,7 @@
 	}
 
 	.vane-dashboard-section {
-		margin-bottom: 4rem;
+		margin-bottom: 3rem;
 	}
 
 	.vane-section-heading {
@@ -761,21 +846,20 @@
 		border-color: #999;
 	}
 
-	.vane-btn-danger-flyout {
-		font-family: var(--vane-mono);
-		text-transform: uppercase;
-		letter-spacing: 0.1em;
-		font-size: 12px;
-		padding: 0.5rem 0.5rem;
+	.vane-flyout-actions-row {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.vane-btn-danger {
 		background: white;
 		color: #ef4444;
 		border: 1px solid #ef4444;
-		cursor: pointer;
-		transition: all 0.15s ease;
-		border-radius: 6px;
 	}
 
-	.vane-btn-danger-flyout:hover {
+	.vane-btn-danger:hover {
 		background: #ef4444;
 		color: white;
 	}
@@ -972,7 +1056,26 @@
 
 		.vane-dashboard-header {
 			flex-direction: column;
+			gap: 0.5rem;
+		}
+
+		.vane-header-top {
+			flex-direction: column;
 			gap: 1rem;
+		}
+
+		.vane-hud {
+			flex-wrap: wrap;
+			gap: 1rem;
+		}
+
+		.vane-hud-divider {
+			display: none;
+		}
+
+		.vane-hud-item {
+			flex: 1;
+			min-width: 80px;
 		}
 
 		.vane-watches-grid {

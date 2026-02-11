@@ -36,10 +36,10 @@
 <div class="vane-benchmark-card">
 	<div class="vane-coverage">
 		<div class="vane-coverage-header">
-			<h2 class="vane-coverage-title">Risk coverage vs. industry</h2>
+			<h2 class="vane-coverage-title">Gap Risk Coverage</h2>
 			<span class="vane-coverage-stat">
 				{percent}%
-				<span class="vane-coverage-detail">({disclosed} of {total} themes)</span>
+				<span class="vane-coverage-detail">({disclosed} of {total} themes covered)</span>
 			</span>
 		</div>
 		<div class="vane-coverage-track">

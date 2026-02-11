@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase 
 	}
 
 	// Parallelize data fetching for better performance
-	const [profileResult, watchesResult, companiesResult] = await Promise.all([
+	const [profileResult, watchesResult, companiesResult, trendingResult] = await Promise.all([
 		supabase.from('profiles').select('*').eq('id', user.id).maybeSingle(),
 		supabase
 			.from('user_watches')
@@ -19,7 +19,12 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase 
 		supabase
 			.from('companies')
 			.select('cik, sic_code, name, ticker, filings!inner(cik)')
-			.order('name', { ascending: true })
+			.order('name', { ascending: true }),
+		supabase
+			.from('mv_trending_pills')
+			.select('theme_id, theme_name, company_reach')
+			.order('company_reach', { ascending: false })
+			.limit(15)
 	]);
 
 	// Fetch filings separately for each watch
@@ -42,13 +47,15 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase 
 	if (profileResult.error) console.error('Load Error (Profile):', profileResult.error);
 	if (watchesResult.error) console.error('Load Error (Watches):', watchesResult.error);
 	if (companiesResult.error) console.error('Load Error (Companies):', companiesResult.error);
+	if (trendingResult.error) console.error('Load Error (Trending):', trendingResult.error);
 
 	return {
 		session,
 		user,
 		profile: profileResult.data || null,
 		watches: watchesResult.data || [],
-		companies: companiesResult.data || []
+		companies: companiesResult.data || [],
+		trendingThemes: trendingResult.data || []
 	};
 };
 

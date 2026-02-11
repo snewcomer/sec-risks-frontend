@@ -133,6 +133,20 @@
 				</div>
 			</header>
 
+			{#if data.trendingThemes && data.trendingThemes.length > 0}
+				<section class="vane-dashboard-section">
+					<h2 class="vane-section-heading">Trending themes</h2>
+					<div class="vane-trending-pills">
+						{#each data.trendingThemes as theme}
+							<a href="/risks/theme/{theme.theme_id}" class="vane-trending-pill">
+								<span class="vane-pill-name">{theme.theme_name}</span>
+								<span class="vane-pill-count">{theme.company_reach}</span>
+							</a>
+						{/each}
+					</div>
+				</section>
+			{/if}
+
 			<section class="vane-dashboard-section">
 				<div
 					style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;"
@@ -280,6 +294,19 @@
 						</form>
 					{/if}
 
+					{#if data.trendingThemes && data.trendingThemes.length > 0}
+						<div class="vane-flyout-trending">
+							<h3 class="vane-mono vane-flyout-section-title">Trending themes</h3>
+							<div class="vane-flyout-pills">
+								{#each data.trendingThemes.slice(0, 5) as theme}
+									<a href="/risks/theme/{theme.theme_id}" class="vane-flyout-pill">
+										{theme.theme_name}
+									</a>
+								{/each}
+							</div>
+						</div>
+					{/if}
+
 					<div class="vane-flyout-footer">
 						<a href="/contact" class="vane-mono vane-flyout-contact-link">
 							Missing risks? Contact us
@@ -380,6 +407,20 @@
 							<div></div>
 						</div>
 					</div>
+
+					{#if data.trendingThemes && data.trendingThemes.length > 0}
+						<div class="vane-flyout-trending">
+							<h3 class="vane-mono vane-flyout-section-title">Trending themes</h3>
+							<div class="vane-flyout-pills">
+								{#each data.trendingThemes.slice(0, 5) as theme}
+									<a href="/risks/theme/{theme.theme_id}" class="vane-flyout-pill">
+										{theme.theme_name}
+									</a>
+								{/each}
+							</div>
+						</div>
+					{/if}
+
 					<div class="vane-flyout-footer">
 						<a href="/contact" class="vane-mono vane-flyout-contact-link">
 							Missing risks? Contact us
@@ -848,6 +889,82 @@
 		box-shadow: 0 2px 5px rgba(255, 127, 14, 0.3);
 	}
 
+	/* Trending Pills */
+	.vane-trending-pills {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+
+	.vane-trending-pill {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem 0.875rem;
+		background: white;
+		border: 1px solid #e3e8ef;
+		border-radius: 20px;
+		text-decoration: none;
+		transition: all 0.15s ease;
+	}
+
+	.vane-trending-pill:hover {
+		border-color: #ff7f0e;
+		background: #fff7ed;
+		transform: translateY(-1px);
+		box-shadow: 0 2px 8px rgba(255, 127, 14, 0.12);
+	}
+
+	.vane-pill-name {
+		font-size: 0.875rem;
+		color: #1a1f36;
+	}
+
+	.vane-pill-count {
+		font-family: var(--vane-mono);
+		font-size: 0.6875rem;
+		padding: 0.125rem 0.375rem;
+		background: #f0f2f5;
+		border-radius: 10px;
+		color: var(--vane-gray);
+	}
+
+	.vane-trending-pill:hover .vane-pill-count {
+		background: #ffe4c9;
+		color: #b8520e;
+	}
+
+	/* Flyout Trending */
+	.vane-flyout-trending {
+		margin-top: 1.5rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid #e3e8ef;
+	}
+
+	.vane-flyout-pills {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+
+	.vane-flyout-pill {
+		display: inline-block;
+		padding: 0.375rem 0.75rem;
+		background: #f6f9fc;
+		border: 1px solid #e3e8ef;
+		border-radius: 16px;
+		font-size: 0.8125rem;
+		color: #425466;
+		text-decoration: none;
+		transition: all 0.15s ease;
+	}
+
+	.vane-flyout-pill:hover {
+		border-color: #ff7f0e;
+		background: #fff7ed;
+		color: #b8520e;
+	}
+
 	@media (max-width: 768px) {
 		.vane-dashboard {
 			padding: 6rem 1rem 2rem;
@@ -865,6 +982,17 @@
 		.vane-flyout {
 			width: 100%;
 			max-width: 100%;
+		}
+
+		.vane-trending-pills {
+			overflow-x: auto;
+			flex-wrap: nowrap;
+			padding-bottom: 0.5rem;
+			-webkit-overflow-scrolling: touch;
+		}
+
+		.vane-trending-pill {
+			flex-shrink: 0;
 		}
 	}
 </style>

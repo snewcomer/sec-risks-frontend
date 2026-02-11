@@ -52,7 +52,6 @@
 					{#if data.company?.ticker}
 						<span class="vane-ticker">{data.company.ticker}</span>
 					{/if}
-					<p class="vane-mono vane-gray">CIK: {data.company?.cik}</p>
 				</div>
 			</div>
 

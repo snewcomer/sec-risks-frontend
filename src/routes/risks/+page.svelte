@@ -1065,8 +1065,9 @@
 		}
 
 		.vane-hud {
-			flex-wrap: wrap;
-			gap: 1rem;
+			flex-direction: column;
+			gap: 0.75rem;
+			align-items: flex-start;
 		}
 
 		.vane-hud-divider {
@@ -1074,8 +1075,19 @@
 		}
 
 		.vane-hud-item {
-			flex: 1;
-			min-width: 80px;
+			width: 100%;
+		}
+
+		.vane-sector-chips {
+			max-width: 100%;
+			overflow-x: auto;
+			flex-wrap: nowrap;
+			padding-bottom: 0.25rem;
+			-webkit-overflow-scrolling: touch;
+		}
+
+		.vane-sector-chip {
+			flex-shrink: 0;
 		}
 
 		.vane-watches-grid {
@@ -1088,8 +1100,12 @@
 		}
 
 		.vane-trending-pills {
+			display: grid;
+			grid-template-columns: repeat(2, max-content);
+			grid-auto-flow: column;
+			grid-template-rows: repeat(2, auto);
+			gap: 0.5rem;
 			overflow-x: auto;
-			flex-wrap: nowrap;
 			padding-bottom: 0.5rem;
 			-webkit-overflow-scrolling: touch;
 		}

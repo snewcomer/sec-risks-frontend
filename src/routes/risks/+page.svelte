@@ -179,9 +179,14 @@
 					style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;"
 				>
 					<h2 class="vane-section-heading" style="margin: 0;">Companies</h2>
-					{#if data.watches.length > 0}
-						<button class="vane-btn" onclick={openAddFlyout}> Track Company </button>
-					{/if}
+					<div style="display: flex; gap: 0.75rem;">
+						{#if data.watches.length > 1}
+							<a href="/risks/compare" class="vane-btn vane-btn-secondary">Compare</a>
+						{/if}
+						{#if data.watches.length > 0}
+							<button class="vane-btn" onclick={openAddFlyout}> Track Company </button>
+						{/if}
+					</div>
 				</div>
 
 				{#if form?.error}
@@ -392,10 +397,22 @@
 							<dt class="vane-mono">SIC</dt>
 							<dd>{selectedWatch.companies.sic_code}</dd>
 							<dt class="vane-mono">Watching Since</dt>
-							<dd>{new Date(selectedWatch.created_at).toLocaleDateString()}</dd>
+							<dd>
+								{new Date(selectedWatch.created_at).toLocaleDateString('en-US', {
+									year: 'numeric',
+									month: 'short',
+									day: 'numeric'
+								})}
+							</dd>
 							{#if selectedWatch.filings && selectedWatch.filings.length > 0}
 								<dt class="vane-mono">Last Filing</dt>
-								<dd>{new Date(selectedWatch.filings[0].filing_date).toLocaleDateString()}</dd>
+								<dd>
+									{new Date(selectedWatch.filings[0].filing_date).toLocaleDateString('en-US', {
+										year: 'numeric',
+										month: 'short',
+										day: 'numeric'
+									})}
+								</dd>
 							{/if}
 						</dl>
 					</div>

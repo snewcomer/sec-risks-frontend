@@ -436,21 +436,12 @@
 		left: 0;
 	}
 
-	.vane-matrix-row.has-divergence {
-		background: #fef2f2;
-	}
-
 	.vane-matrix-theme {
 		background: #fafbfc;
 		position: sticky;
 		left: 0;
 		z-index: 1;
 		min-width: 200px;
-	}
-
-	.has-divergence .vane-matrix-theme {
-		background: #fef2f2;
-		border-left: 3px solid #ef4444;
 	}
 
 	.vane-theme-name {
@@ -463,18 +454,6 @@
 	.vane-matrix-cell {
 		min-width: 250px;
 		max-width: 300px;
-	}
-
-	.vane-matrix-cell.severity-high {
-		background: #fef2f2;
-	}
-
-	.vane-matrix-cell.severity-medium {
-		background: #fffbeb;
-	}
-
-	.vane-matrix-cell.severity-low {
-		background: #f0fdf4;
 	}
 
 	.vane-cell-content {

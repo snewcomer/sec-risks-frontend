@@ -30,7 +30,7 @@
 </script>
 
 <svelte:head>
-	<title>{data.company?.name || 'Company'} Risks - Vane</title>
+	<title>{data.company?.name || 'Company'} - Vane</title>
 </svelte:head>
 
 <div class="vane-home vane-page">
@@ -56,6 +56,9 @@
 			</div>
 
 			<div class="vane-actions">
+				<a href={`/risks/compare?companies=${data.company?.cik}`} class="vane-btn-secondary">
+					Compare
+				</a>
 				<a
 					href={`https://www.sec.gov/cgi-bin/browse-edgar?CIK=${data.company?.cik}`}
 					target="_blank"

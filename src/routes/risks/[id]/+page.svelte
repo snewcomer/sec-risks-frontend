@@ -115,6 +115,7 @@
 					{:else}
 						<div class="vane-risk-grid">
 							{#each filing.risks as risk}
+								{@const quoteId = `quote-${risk.risk_id}`}
 								<article class="vane-risk-card">
 									<div class="vane-risk-header">
 										<h3 class="vane-risk-title">{risk.risk_title}</h3>
@@ -142,6 +143,17 @@
 										</div>
 									</div>
 									<p class="vane-risk-summary">{risk.risk_summary}</p>
+									{#if risk.verbatim_quote}
+										<details class="vane-quote-details">
+											<summary class="vane-quote-toggle">
+												<span class="vane-quote-icon">❝</span>
+												View SEC filing excerpt
+											</summary>
+											<blockquote class="vane-quote-content">
+												{risk.verbatim_quote}
+											</blockquote>
+										</details>
+									{/if}
 								</article>
 							{/each}
 						</div>
@@ -328,6 +340,55 @@
 		color: #425466;
 		font-size: 0.9375rem;
 		line-height: 1.6;
+	}
+
+	/* Quote Reveal */
+	.vane-quote-details {
+		margin-top: 1rem;
+	}
+
+	.vane-quote-toggle {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.375rem;
+		font-family: var(--vane-mono);
+		font-size: 0.75rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--vane-gray);
+		cursor: pointer;
+		padding: 0.375rem 0;
+		transition: color 0.15s ease;
+		list-style: none;
+	}
+
+	.vane-quote-toggle::-webkit-details-marker {
+		display: none;
+	}
+
+	.vane-quote-toggle:hover {
+		color: #ff7f0e;
+	}
+
+	.vane-quote-icon {
+		font-size: 1rem;
+		line-height: 1;
+	}
+
+	.vane-quote-details[open] .vane-quote-toggle {
+		color: #ff7f0e;
+	}
+
+	.vane-quote-content {
+		margin: 0.75rem 0 0;
+		padding: 1rem 1.25rem;
+		background: #f8fafc;
+		border-left: 3px solid #ff7f0e;
+		border-radius: 0 6px 6px 0;
+		font-size: 0.875rem;
+		line-height: 1.7;
+		color: #475569;
+		font-style: italic;
 	}
 
 	/* Badges */

@@ -144,9 +144,7 @@
 			<section class="vane-settings-section">
 				<h2 class="vane-section-heading">Support</h2>
 				<div class="vane-settings-card">
-					<p class="vane-mono vane-gray">
-						Have questions or need help? We're here for you.
-					</p>
+					<p class="vane-mono vane-gray">Have questions or need help? We're here for you.</p>
 					<div class="vane-settings-actions">
 						<a href="/contact" class="vane-btn">Contact Us</a>
 					</div>

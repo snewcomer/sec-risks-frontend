@@ -47,6 +47,7 @@ export const load: PageServerLoad = async ({ params, locals: { safeGetSession, s
 				risk_id,
 				risk_title,
 				risk_summary,
+				verbatim_quote,
 				category,
 				severity,
 				theme_id,

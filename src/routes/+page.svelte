@@ -81,6 +81,8 @@
 
 <svelte:head>
 	<title>Vane - 2026 10-Ks Are In. Track SEC Risk Changes for Free</title>
+	<link rel="icon" href="/favicon.png" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 	<meta
 		name="description"
 		content="2026 10-K season is here! Vane automatically detects when risk disclosures shift from 'might happen' to 'is happening' in SEC filings. Try free, know first."

@@ -80,14 +80,13 @@
 	<main class="vane-container">
 		<div class="vane-back-nav">
 			<a href="/risks" class="vane-back-link">
-				<span class="vane-arrow">←</span> Dashboard
+				<span class="vane-arrow">←</span> dashboard
 			</a>
 		</div>
 
 		<header class="vane-header">
 			<div>
 				<h1 class="vane-title">Risk Comparison</h1>
-				<p class="vane-subtitle">Compare risk disclosures across companies by theme</p>
 			</div>
 		</header>
 
@@ -141,8 +140,15 @@
 								<th class="vane-matrix-corner">Risk Theme</th>
 								{#each selectedCompanies as company}
 									<th class="vane-matrix-company">
-										<span class="vane-company-ticker">{company.ticker || 'N/A'}</span>
-										<span class="vane-company-name">{company.name}</span>
+										{#if data.watchMap[company.cik]}
+											<a href="/risks/{data.watchMap[company.cik]}" class="vane-company-link">
+												<span class="vane-company-ticker">{company.ticker || 'N/A'}</span>
+												<span class="vane-company-name">{company.name}</span>
+											</a>
+										{:else}
+											<span class="vane-company-ticker">{company.ticker || 'N/A'}</span>
+											<span class="vane-company-name">{company.name}</span>
+										{/if}
 									</th>
 								{/each}
 							</tr>
@@ -157,7 +163,9 @@
 								{#each group.themes as theme}
 									<tr class="vane-matrix-row" class:has-divergence={theme.hasDivergence}>
 										<td class="vane-matrix-theme">
-											<span class="vane-theme-name">{theme.theme_name}</span>
+											<a href="/risks/theme/{theme.theme_id}" class="vane-theme-link">
+												{theme.theme_name}
+											</a>
 										</td>
 										{#each data.selectedCiks as cik}
 											{@const risks = data.companyRisks[cik]?.risks[theme.theme_id]}
@@ -206,8 +214,7 @@
 													</div>
 												{:else}
 													<div class="vane-cell-empty">
-														<span class="vane-no-disclosure">No disclosure</span>
-														<span class="vane-no-disclosure-hint">Theme not addressed in 10-K</span>
+														<span class="vane-no-disclosure">Theme not addressed in 10-K</span>
 													</div>
 												{/if}
 											</td>
@@ -271,7 +278,7 @@
 	}
 
 	.vane-header {
-		margin-bottom: 2rem;
+		margin-bottom: 1rem;
 	}
 
 	.vane-title {
@@ -424,6 +431,20 @@
 		color: var(--vane-gray);
 	}
 
+	.vane-company-link {
+		text-decoration: none;
+		display: block;
+		transition: opacity 0.15s ease;
+	}
+
+	.vane-company-link:hover {
+		opacity: 0.7;
+	}
+
+	.vane-company-link:hover .vane-company-ticker {
+		color: #ff7f0e;
+	}
+
 	.vane-matrix-category-row td {
 		background: #1a1f36;
 		color: white;
@@ -444,10 +465,16 @@
 		min-width: 200px;
 	}
 
-	.vane-theme-name {
+	.vane-theme-link {
 		font-size: 0.875rem;
 		font-weight: 500;
 		color: #1a1f36;
+		text-decoration: none;
+		transition: color 0.15s ease;
+	}
+
+	.vane-theme-link:hover {
+		color: #ff7f0e;
 	}
 
 	/* Matrix Cells */
@@ -574,7 +601,6 @@
 		flex-direction: column;
 		gap: 0.25rem;
 		padding: 0.5rem;
-		background: #f8fafc;
 		border-radius: 6px;
 		border: 1px dashed #e3e8ef;
 	}
@@ -584,12 +610,7 @@
 		font-size: 0.75rem;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
-		color: #94a3b8;
-	}
-
-	.vane-no-disclosure-hint {
-		font-size: 0.6875rem;
-		color: #cbd5e1;
+		color: #788496;
 	}
 
 	/* Empty State */

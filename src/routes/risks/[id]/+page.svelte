@@ -39,7 +39,7 @@
 	<main class="vane-container">
 		<div class="vane-back-nav">
 			<a href="/risks" class="vane-back-link">
-				<span class="vane-arrow">←</span> Back
+				<span class="vane-arrow">←</span> back
 			</a>
 		</div>
 

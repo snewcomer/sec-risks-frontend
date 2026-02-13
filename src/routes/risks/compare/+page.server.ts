@@ -229,6 +229,12 @@ export const load: PageServerLoad = async ({ url, locals: { safeGetSession, supa
 		}
 	}
 
+	// Build watchMap: cik → watch id for linking
+	const watchMap: Record<string, string> = {};
+	for (const w of watches || []) {
+		watchMap[w.cik] = w.id;
+	}
+
 	return {
 		session,
 		user,
@@ -236,6 +242,7 @@ export const load: PageServerLoad = async ({ url, locals: { safeGetSession, supa
 		selectedCiks,
 		companyRisks,
 		matrix,
-		themeMap
+		themeMap,
+		watchMap
 	};
 };

@@ -28,7 +28,7 @@ declare global {
 		// interface PageState {}
 		interface Platform {
 			env: {
-				RATE_LIMIT_KV: KVNamespace;
+				RATE_LIMITS: KVNamespace;
 			};
 		}
 	}

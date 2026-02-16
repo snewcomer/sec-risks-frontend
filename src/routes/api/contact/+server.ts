@@ -8,7 +8,7 @@ const RATE_LIMIT_WINDOW = 60 * 15; // 15 minutes in seconds
 
 async function checkRateLimit(
 	ip: string,
-	kv: App.Platform['env']['RATE_LIMIT_KV']
+	kv: App.Platform['env']['RATE_LIMITS']
 ): Promise<boolean> {
 	const key = `rl:${ip}`;
 
@@ -31,8 +31,8 @@ export const POST: RequestHandler = async ({ request, getClientAddress, platform
 	try {
 		// Rate limit check (skip if KV not available, e.g., in dev)
 		const clientIp = getClientAddress();
-		if (platform?.env?.RATE_LIMIT_KV) {
-			const allowed = await checkRateLimit(clientIp, platform.env.RATE_LIMIT_KV);
+		if (platform?.env?.RATE_LIMITS) {
+			const allowed = await checkRateLimit(clientIp, platform.env.RATE_LIMITS);
 			if (!allowed) {
 				throw error(429, 'Too many requests. Please try again later.');
 			}

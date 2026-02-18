@@ -1,10 +1,13 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import DashboardNav from '$lib/components/DashboardNav.svelte';
+	import SearchableSelect from '$lib/components/SearchableSelect.svelte';
+	import { getIndustryName } from '$lib/utils/sic-codes';
 
 	let { data }: { data: PageData } = $props();
 
 	let loading = $state(false);
+	let selectedSic = $state('');
 
 	function getSeverityClass(severity: string | null) {
 		switch (severity?.toLowerCase()) {
@@ -18,6 +21,15 @@
 				return 'vane-badge-neutral';
 		}
 	}
+
+	const filteredRisks = $derived(
+		selectedSic
+			? data.risks.filter((risk) => {
+					const company = (risk.filings as any)?.companies;
+					return company?.sic_code && getIndustryName(company.sic_code) === selectedSic;
+				})
+			: data.risks
+	);
 
 	async function loadMore() {
 		loading = true;
@@ -44,18 +56,29 @@
 			<div>
 				<h1 class="vane-title">{data.theme?.theme_name}</h1>
 				<p class="vane-mono vane-gray">
-					{data.risks.length}{data.hasMore ? '+' : ''} risks across companies
+					{filteredRisks.length}{!selectedSic && data.hasMore ? '+' : ''} risks across companies
 				</p>
 			</div>
+			{#if data.sicOptions.length > 0}
+				<div class="vane-filter">
+					<SearchableSelect
+						options={data.sicOptions}
+						bind:value={selectedSic}
+						placeholder="Filter by industry..."
+					/>
+				</div>
+			{/if}
 		</header>
 
 		<div class="vane-risks-list">
-			{#if data.risks.length === 0}
+			{#if filteredRisks.length === 0}
 				<div class="vane-empty-state">
-					<p class="vane-mono vane-gray">No risks found for this theme.</p>
+					<p class="vane-mono vane-gray">
+						{selectedSic ? 'No risks found for this industry.' : 'No risks found for this theme.'}
+					</p>
 				</div>
 			{:else}
-				{#each data.risks as risk}
+				{#each filteredRisks as risk}
 					{@const filing = risk.filings as any}
 					{@const company = filing?.companies}
 					<article class="vane-risk-card">
@@ -166,6 +189,15 @@
 		padding: 2rem;
 		border-radius: 12px;
 		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 1.5rem;
+	}
+
+	.vane-filter {
+		flex-shrink: 0;
+		width: 320px;
 	}
 
 	.vane-title {

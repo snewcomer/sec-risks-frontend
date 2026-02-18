@@ -1,5 +1,6 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+import { getIndustryName } from '$lib/utils/sic-codes';
 
 export const load: PageServerLoad = async ({
 	params,
@@ -34,7 +35,8 @@ export const load: PageServerLoad = async ({
 					companies!inner (
 						name,
 						ticker,
-						cik
+						cik,
+						sic_code
 					)
 				)
 			`
@@ -65,6 +67,21 @@ export const load: PageServerLoad = async ({
 	const hasMore = risksResult.data.length > limit;
 	const risks = hasMore ? risksResult.data.slice(0, limit) : risksResult.data;
 
+	// Build distinct SIC description options from the risks
+	const sicDescriptionSet = new Map<string, string>();
+	for (const risk of risks) {
+		const company = (risk.filings as any)?.companies;
+		if (company?.sic_code) {
+			const description = getIndustryName(company.sic_code);
+			if (description) {
+				sicDescriptionSet.set(description, description);
+			}
+		}
+	}
+	const sicOptions = Array.from(sicDescriptionSet.keys())
+		.sort()
+		.map((desc) => ({ value: desc, label: desc }));
+
 	return {
 		session,
 		user,
@@ -72,6 +89,7 @@ export const load: PageServerLoad = async ({
 		risks,
 		hasMore,
 		currentLimit: limit,
-		watchMap
+		watchMap,
+		sicOptions
 	};
 };

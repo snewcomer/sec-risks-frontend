@@ -194,7 +194,7 @@
 
 	.searchable-select-input {
 		width: 100%;
-		padding: 0.75rem 3rem 0.75rem 1rem;
+		padding: 0.75rem 4rem 0.75rem 1rem;
 		border: 1px solid #e3e8ef;
 		font-family: var(--vane-mono);
 		font-size: 14px;
@@ -202,6 +202,9 @@
 		cursor: text;
 		border-radius: 8px;
 		transition: all 0.2s ease;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
 	}
 
 	.searchable-select-input:focus {
@@ -212,20 +215,21 @@
 
 	.searchable-select-clear {
 		position: absolute;
-		right: 2.5rem;
+		right: 2.25rem;
 		background: none;
 		border: none;
-		font-size: 1.5rem;
+		font-size: 1.1rem;
 		line-height: 1;
 		cursor: pointer;
 		color: var(--vane-gray);
 		padding: 0;
-		width: 1.5rem;
-		height: 1.5rem;
+		width: 1.25rem;
+		height: 1.25rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		transition: color 0.15s ease;
+		flex-shrink: 0;
 	}
 
 	.searchable-select-clear:hover {
